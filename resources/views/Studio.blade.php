@@ -112,10 +112,15 @@
         <div style="display: flex; justify-content: center;">
             <button onclick="bookNow()">Book Now</button>
         </div>
+        <div style="display: flex; justify-content: center;">
+            <button onclick="showBooking()">View My Booking</button>
+        </div>
     </div>
     <div id="confirmation"></div>
 
 <script>
+    let bookingInfo = ''; // Global variable to store the booking summary
+
     function bookNow() {
         const fullName = document.getElementById('name').value;
         const matrics = document.getElementById('matrics').value;
@@ -126,19 +131,17 @@
         const endDate = document.getElementById('end-date').value;
         const bookingTime = document.getElementById('booking-time').value;
 
-        // Get all selected studios (checkboxes)
         const studioCheckboxes = document.querySelectorAll('input[name="studio-name"]:checked');
         const selectedStudios = Array.from(studioCheckboxes).map(cb => cb.value).join(', ');
 
-        // Check if all required fields are filled
         if (!fullName || !matrics || !club || !reason || !phone || !startDate || !endDate || !bookingTime || selectedStudios.length === 0) {
             alert('Please fill in all fields and select at least one studio.');
             return;
         }
 
-        const confirmation = document.getElementById('confirmation');
-        confirmation.innerHTML = `
-            <h3>Booking Confirmed!</h3>
+        // Store the booking info in a global variable
+        bookingInfo = `
+            <h3>Booking Details</h3>
             <p><b>Name:</b> ${fullName}</p>
             <p><b>Matrics/Staff No:</b> ${matrics}</p>
             <p><b>Club:</b> ${club}</p>
@@ -148,11 +151,22 @@
             <p><b>Time Slot:</b> ${bookingTime}</p>
             <p><b>Studios Booked:</b> ${selectedStudios}</p>
         `;
-        confirmation.style.display = 'block';
 
-        // Optional: Reset form fields after confirmation
-        document.querySelector('form')?.reset(); // Only if you wrap the form in a <form> tag
+        alert("Booking Successful!\n\nClick 'View My Booking' to see the details.");
+        document.querySelector('form')?.reset();
+    }
+
+    function showBooking() {
+        const confirmation = document.getElementById('confirmation');
+        if (bookingInfo) {
+            confirmation.innerHTML = bookingInfo;
+            confirmation.style.display = 'block';
+        } else {
+            confirmation.innerHTML = "<p>No booking has been made yet.</p>";
+            confirmation.style.display = 'block';
+        }
     }
 </script>
+
 </body>
 </html>
