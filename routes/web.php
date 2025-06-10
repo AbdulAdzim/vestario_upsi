@@ -9,6 +9,11 @@ Route::get('/', function () {
 
 Route::view('/Studio', 'Studio')->name('Studio');
 
+Route::view('/busana', 'busana')->name('busana');
+
+
+
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
