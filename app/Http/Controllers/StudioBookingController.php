@@ -7,9 +7,10 @@ use App\Models\StudioBooking;
 
 class StudioBookingController extends Controller
 {
+    // User: Submit booking
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required',
             'matrics' => 'required',
             'club' => 'required',
@@ -18,23 +19,22 @@ class StudioBookingController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'time_slot' => 'required',
-            'studio' => 'required|array|min:1|max:1', // Only 1 studio allowed
+            'studio' => 'required|array|max:2',
         ]);
 
         StudioBooking::create([
-            'name' => $validated['name'],
-            'matrics' => $validated['matrics'],
-            'club' => $validated['club'],
-            'reason' => $validated['reason'],
-            'phone' => $validated['phone'],
-            'start_date' => $validated['start_date'],
-            'end_date' => $validated['end_date'],
-            'time_slot' => $validated['time_slot'],
-            'studio' => implode(',', $validated['studio']),
-            'status' => 'pending', // Add default status
+            'name' => $request->name,
+            'matrics' => $request->matrics,
+            'club' => $request->club,
+            'reason' => $request->reason,
+            'phone' => $request->phone,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'time_slot' => $request->time_slot,
+            'studios' => json_encode($request->studio), // convert array to JSON
         ]);
 
-        return back()->with('success', 'Booking submitted! Waiting for admin approval.');
+        return redirect()->back()->with('success', 'Booking submitted successfully!');
     }
 
     // Admin: Show all bookings

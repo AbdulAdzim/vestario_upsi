@@ -13,15 +13,14 @@ Route::get('/', function () {
 })->name('home');
 
 Route::view('/Studio', 'Studio')->name('Studio');
-<<<<<<< HEAD
+
 
 Route::view('/busana', 'busana')->name('busana');
 
 
 
 
-=======
->>>>>>> e0601fde41001ccc0ddf28d3353d44f0b3b7f5b6
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

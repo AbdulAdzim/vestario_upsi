@@ -9,9 +9,9 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('studio_bookings', function (Blueprint $table) {
+public function up(): void
+{
+    Schema::create('studio_bookings', function (Blueprint $table) {
         $table->id();
         $table->string('name');
         $table->string('matrics');
@@ -21,17 +21,16 @@ return new class extends Migration
         $table->date('start_date');
         $table->date('end_date');
         $table->string('time_slot');
-        $table->string('studio'); // Comma-separated values for studio selection
-        $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+        $table->json('studios'); // This should match your form's array submission
         $table->timestamps();
     });
-    }
+}
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('studio_bookings');
     }
 };
