@@ -64,6 +64,11 @@
             border-radius: 6px;
         }
 
+        #confirmation.no-booking {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+        }
+
         .studio-columns {
             display: flex;
             gap: 40px;
@@ -211,53 +216,85 @@
             }
         }
 
-        let bookingInfo = '';
+        // Fixed booking functionality
+        let savedBookingData = null;
         let isBookingVisible = false;
 
-        function toggleBooking() {
-            const name = document.getElementById('name').value;
-            const matrics = document.getElementById('matrics').value;
-            const club = document.getElementById('club').value;
-            const reason = document.getElementById('reason').value;
-            const phone = document.getElementById('phone').value;
-            const startDate = document.getElementById('start-date').value;
-            const endDate = document.getElementById('end-date').value;
-            const bookingTime = document.getElementById('booking-time').value;
-            const studios = Array.from(document.querySelectorAll('input[name="studio[]"]:checked')).map(cb => cb.value).join(', ');
+        // Save booking data when form is submitted
+        document.getElementById('studioForm').addEventListener('submit', function(e) {
+            savedBookingData = {
+                name: document.getElementById('name').value,
+                matrics: document.getElementById('matrics').value,
+                club: document.getElementById('club').value,
+                reason: document.getElementById('reason').value,
+                phone: document.getElementById('phone').value,
+                startDate: document.getElementById('start-date').value,
+                endDate: document.getElementById('end-date').value,
+                timeSlot: document.getElementById('booking-time').value,
+                studios: Array.from(document.querySelectorAll('input[name="studio[]"]:checked')).map(cb => cb.value)
+            };
+        });
 
+        function toggleBooking() {
             const confirmation = document.getElementById('confirmation');
             const toggleBtn = document.getElementById('toggleBookingBtn');
 
-            if (!name || !matrics || !club || !reason || !phone || !startDate || !endDate || !bookingTime || !studios) {
-                confirmation.innerHTML = "<p>No booking has been made yet.</p>";
+            if (isBookingVisible) {
+                // Hide the booking details
+                confirmation.style.display = 'none';
+                toggleBtn.textContent = "View My Booking";
+                isBookingVisible = false;
+            } else {
+                // Show the booking details
+                if (savedBookingData && savedBookingData.name) {
+                    // Show saved booking
+                    const studiosText = savedBookingData.studios.length > 0 ? 
+                        savedBookingData.studios.join(', ') : 'None selected';
+                    
+                    confirmation.innerHTML = `
+                        <h3>Latest Booking Details</h3>
+                        <p><b>Name:</b> ${savedBookingData.name}</p>
+                        <p><b>Matrics/Staff No:</b> ${savedBookingData.matrics}</p>
+                        <p><b>Club:</b> ${savedBookingData.club}</p>
+                        <p><b>Reason:</b> ${savedBookingData.reason}</p>
+                        <p><b>Phone:</b> ${savedBookingData.phone}</p>
+                        <p><b>Date:</b> ${savedBookingData.startDate} until ${savedBookingData.endDate}</p>
+                        <p><b>Time Slot:</b> ${savedBookingData.timeSlot}</p>
+                        <p><b>Studios Booked:</b> ${studiosText}</p>
+                    `;
+                    confirmation.className = '';
+                } else {
+                    // No booking made yet
+                    confirmation.innerHTML = `
+                        <h3>No Booking Found</h3>
+                        <p>You haven't made any booking yet. Please fill out the form above to make a booking.</p>
+                    `;
+                    confirmation.className = 'no-booking';
+                }
+                
                 confirmation.style.display = 'block';
                 toggleBtn.textContent = "Hide My Booking";
                 isBookingVisible = true;
-                return;
-            }
-
-            bookingInfo = `
-                <h3>Booking Details</h3>
-                <p><b>Name:</b> ${name}</p>
-                <p><b>Matrics/Staff No:</b> ${matrics}</p>
-                <p><b>Club:</b> ${club}</p>
-                <p><b>Reason:</b> ${reason}</p>
-                <p><b>Phone:</b> ${phone}</p>
-                <p><b>Date:</b> ${startDate} until ${endDate}</p>
-                <p><b>Time Slot:</b> ${bookingTime}</p>
-                <p><b>Studios Booked:</b> ${studios}</p>
-            `;
-
-            isBookingVisible = !isBookingVisible;
-
-            if (isBookingVisible) {
-                confirmation.innerHTML = bookingInfo;
-                confirmation.style.display = 'block';
-                toggleBtn.textContent = "Hide My Booking";
-            } else {
-                confirmation.style.display = 'none';
-                toggleBtn.textContent = "View My Booking";
             }
         }
+
+        // Handle successful booking from session
+        @if (session('success'))
+            setTimeout(function() {
+                if (!savedBookingData) {
+                    savedBookingData = {
+                        name: "Booking Submitted Successfully",
+                        matrics: "Check your email for confirmation",
+                        club: "Last submitted booking",
+                        reason: "Booking completed",
+                        phone: "",
+                        startDate: "",
+                        endDate: "",
+                        timeSlot: "",
+                        studios: []
+                    };
+                }
+            }, 100);
+        @endif
     </script>
 </x-layouts.app>

@@ -1,75 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Bookings</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+<x-layouts.app :title="__('Admin - Booking Requests')">
+    <div class="container">
+        <h1>Admin - Booking Requests</h1>
 
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .status {
-            text-transform: capitalize;
-        }
-    </style>
-</head>
-<body>
-    <h2>Studio Booking Requests</h2>
-
-    @if(session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
-    @endif
-
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Matrics/Staff No</th>
-                <th>Club/Org</th>
-                <th>Reason</th>
-                <th>Phone</th>
-                <th>Start - End Date</th>
-                <th>Time Slot</th>
-                <th>Studios</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach($bookings as $booking)
-            <tr>
-                <td>{{ $booking->id }}</td>
-                <td>{{ $booking->name }}</td>
-                <td>{{ $booking->matrics }}</td>
-                <td>{{ $booking->club }}</td>
-                <td>{{ $booking->reason }}</td>
-                <td>{{ $booking->phone }}</td>
-                <td>{{ $booking->start_date }} - {{ $booking->end_date }}</td>
-                <td>{{ $booking->time_slot }}</td>
-                <td>{{ $booking->studio }}</td>
-                <td class="status">{{ $booking->status }}</td>
-                <td>
-                    @if($booking->status == 'pending')
-                        <a href="{{ route('admin.booking.update', [$booking->id, 'accepted']) }}">Accept</a> |
-                        <a href="{{ route('admin.booking.update', [$booking->id, 'rejected']) }}">Reject</a>
+        @foreach ($bookings as $booking)
+            <div style="border:1px solid #ccc; padding:20px; margin-bottom:20px; border-radius:10px;">
+                <p><strong>Name:</strong> {{ $booking->name }}</p>
+                <p><strong>Matrics:</strong> {{ $booking->matrics }}</p>
+                <p><strong>Club:</strong> {{ $booking->club }}</p>
+                <p><strong>Reason:</strong> {{ $booking->reason }}</p>
+                <p><strong>Studio(s):</strong> {{ $booking->studio }}</p>
+                <p><strong>Date:</strong> {{ $booking->start_date }} to {{ $booking->end_date }}</p>
+                <p><strong>Time:</strong> {{ $booking->time_slot }}</p>
+                <p><strong>Status:</strong> 
+                    @if ($booking->status == 'pending')
+                        <span style="color: orange;">Pending</span>
+                    @elseif ($booking->status == 'accepted')
+                        <span style="color: green;">Accepted</span>
                     @else
-                        {{ ucfirst($booking->status) }}
+                        <span style="color: red;">Rejected</span>
                     @endif
-                </td>
-            </tr>
+                </p>
+
+                @if ($booking->status === 'pending')
+                    <form method="POST" action="{{ route('admin.bookings.accept', $booking->id) }}" style="display:inline;">
+                        @csrf
+                        <button type="submit" style="background-color: green; color: white;">Accept</button>
+                    </form>
+                    <form method="POST" action="{{ route('admin.bookings.reject', $booking->id) }}" style="display:inline;">
+                        @csrf
+                        <button type="submit" style="background-color: red; color: white;">Reject</button>
+                    </form>
+                @endif
+            </div>
         @endforeach
-        </tbody>
-    </table>
-</body>
-</html>
+    </div>
+</x-layouts.app>
