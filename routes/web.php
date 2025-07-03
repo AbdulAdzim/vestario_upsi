@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\StudioBookingController;
 use App\Http\Controllers\AdminBookingController;
+use App\Http\Controllers\AdminHomeController;
+use App\Http\Controllers\BookingSearchController;
 
+Route::get('/check-booking', [BookingSearchController::class, 'index'])->name('bookings.search');
+Route::post('/check-booking', [BookingSearchController::class, 'search'])->name('bookings.search.result');
 
 // 📝 Route to handle form submission for studio booking (POST method)
 Route::post('/studio-booking', [StudioBookingController::class, 'store'])->name('studio.booking.store');
@@ -44,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
 require __DIR__.'/auth.php';
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminHomeController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/admin/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings');
     Route::post('/admin/bookings/{id}/accept', [AdminBookingController::class, 'accept'])->name('admin.bookings.accept');
     Route::post('/admin/bookings/{id}/reject', [AdminBookingController::class, 'reject'])->name('admin.bookings.reject');

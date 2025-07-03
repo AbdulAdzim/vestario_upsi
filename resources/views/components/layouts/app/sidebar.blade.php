@@ -17,7 +17,8 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Home') }}</flux:navlist.item>
                     <!-- Studio -->
                     <flux:navlist.item icon="paint-brush" :href="route('Studio')" :current="request()->routeIs('Studio')" wire:navigate>{{ __('Studio') }}</flux:navlist.item>
-                                 
+                    <!-- CheckBooking -->
+                    <flux:navlist.item icon="check-circle" :href="route('bookings.search')" :current="request()->routeIs('bookings.search')" wire:navigate>{{ __('Check Booking') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
