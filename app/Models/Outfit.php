@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Outfit extends Model
 {
     protected $fillable = [
-        'name',
-        'description',
-        'image_path',
-        'is_featured',
-    ];
+    'name',
+    'description',
+    'type',
+    'gender',
+    'status',
+    'image_path',
+    'is_featured',
+];
+
 }

@@ -149,18 +149,24 @@
                 <input type="text" name="name" placeholder="Outfit Name" required>
                 <textarea name="description" placeholder="Description"></textarea>
 
-                <div class="form-row">
-                    <label>Category:</label><br>
-                    @foreach(['Fullset', 'Accessories', 'Top', 'Bottom'] as $type)
-                        <label><input type="radio" name="type" value="{{ strtolower($type) }}"> {{ $type }}</label>
-                    @endforeach
-                </div>
+                <!-- ✅ Category (type) -->
+<div class="form-row">
+    <label>Category:</label><br>
+    @foreach(['Fullset', 'Accessories', 'Top', 'Bottom'] as $type)
+        <label>
+            <input type="radio" name="type" value="{{ strtolower($type) }}" required>
+            {{ $type }}
+        </label>
+    @endforeach
+</div>
 
-                <div class="form-row">
-                    <label>Gender:</label><br>
-                    <label><input type="radio" name="gender" value="male"> Male</label>
-                    <label><input type="radio" name="gender" value="female"> Female</label>
-                </div>
+<!-- ✅ Gender -->
+<div class="form-row">
+    <label>Gender:</label><br>
+    <label><input type="radio" name="gender" value="male" required> Male</label>
+    <label><input type="radio" name="gender" value="female"> Female</label>
+</div>
+
 
                 <div class="form-row">
                     <label>Status:</label><br>
@@ -175,20 +181,6 @@
         @endif
     @endauth
 
-    @auth
-    @if(auth()->user()->role !== 'admin')
-        <!-- 🎞️ Featured Outfits -->
-        <div class="swiper mySwiper" style="height: 300px; margin-bottom: 30px;">
-            <div class="swiper-wrapper">
-                @foreach($featuredOutfits as $outfit)
-                    <div class="swiper-slide">
-                        <img src="{{ asset('storage/' . $outfit->image_path) }}" alt="{{ $outfit->name }}" style="height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endif
-@endauth
 
 
     <!-- 🧭 Filters -->

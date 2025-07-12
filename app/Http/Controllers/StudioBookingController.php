@@ -105,47 +105,58 @@ class StudioBookingController extends Controller
 {
     $query = Outfit::query();
 
-    if ($request->type && $request->type !== 'all') {
+    // Filter by type
+    if ($request->has('type') && $request->type !== 'all') {
         $query->where('type', $request->type);
     }
 
-    if ($request->gender && $request->gender !== 'all') {
+    // Filter by gender
+    if ($request->has('gender') && $request->gender !== 'all') {
         $query->where('gender', $request->gender);
     }
 
+    // Get filtered results
     $outfits = $query->get();
-    $featuredOutfits = Outfit::take(5)->get();
+    $featuredOutfits = (clone $query)->take(5)->get();
 
     return view('busana', compact('outfits', 'featuredOutfits'));
 }
 
 
+
+
     // ✅ Admin: Create new outfit
     public function createOutfit(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'nullable',
-            'image' => 'nullable|image|max:2048',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string',
+        'description' => 'nullable|string',
+        'type' => 'required|string',
+        'gender' => 'required|string',
+        'status' => 'required|string',
+        'image' => 'nullable|image|max:2048',
+    ]);
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('outfits', 'public');
-        }
-
-        Outfit::create([
-    'name' => $request->name,
-    'description' => $request->description,
-    'image_path' => $imagePath,
-    'type' => $request->type,
-    'gender' => $request->gender,
-    'is_featured' => false,
-        ]);
-
-
-        return back()->with('success', 'Outfit added!');
+    $imagePath = null;
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('outfits', 'public');
     }
+
+    Outfit::create([
+        'name' => $request->name,
+        'description' => $request->description,
+        'type' => $request->type,
+        'gender' => $request->gender,
+        'status' => $request->status,
+        'image_path' => $imagePath,
+        'is_featured' => false,
+    ]);
+
+    return back()->with('success', 'Outfit added!');
+}
+
+
+
 
     // 🗑️ Admin: Delete outfit
     public function deleteOutfit($id)
@@ -173,7 +184,9 @@ public function updateOutfit(Request $request, $id)
     $request->validate([
         'name' => 'required',
         'description' => 'nullable',
-        'status' => 'nullable',
+        'type' => 'required|string',
+        'gender' => 'required|string',
+        'status' => 'required|string',
         'image' => 'nullable|image|max:2048',
     ]);
 
@@ -182,18 +195,20 @@ public function updateOutfit(Request $request, $id)
         if ($outfit->image_path) {
             \Storage::disk('public')->delete($outfit->image_path);
         }
-
         $outfit->image_path = $request->file('image')->store('outfits', 'public');
     }
 
-    // Assign updated values
+    // Assign all updated values
     $outfit->name = $request->name;
     $outfit->description = $request->description;
+    $outfit->type = $request->type;
+    $outfit->gender = $request->gender;
     $outfit->status = $request->status;
 
-    $outfit->save(); // ✅ This line updates the existing record
+    $outfit->save();
 
     return redirect()->route('busana')->with('success', 'Outfit updated successfully!');
 }
+
 
 }
