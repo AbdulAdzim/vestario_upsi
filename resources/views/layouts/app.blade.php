@@ -1,18 +1,81 @@
-<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vestario Booking</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config('app.name', 'Vestario') }} - @yield('title', 'Home')</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Vestario Booking System</h1>
-    </header>
 
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('home') }}">Vestario</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('Studio') }}">Studio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('busana') }}">Busana</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('bookings.search') }}">Check Booking</a></li>
+
+                    @auth
+                    <!-- Authenticated User Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="dropdown-item text-muted small">{{ Auth::user()->email }}</li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('settings.profile') }}">
+                                    ⚙️ Settings
+                                </a>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        🚪 Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    @endauth
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
     <main class="py-4">
         @yield('content')
     </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
