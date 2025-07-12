@@ -101,13 +101,24 @@ class StudioBookingController extends Controller
     }
 
     // 👗 User: View Busana (Outfit) booking page
-    public function showBusanaPage()
-    {
-        $outfits = Outfit::all();
-        $featuredOutfits = Outfit::take(5)->get(); // or ->where('is_featured', true)
+    public function showBusanaPage(Request $request)
+{
+    $query = Outfit::query();
 
-        return view('busana', compact('outfits', 'featuredOutfits'));
+    if ($request->type && $request->type !== 'all') {
+        $query->where('type', $request->type);
     }
+
+    if ($request->gender && $request->gender !== 'all') {
+        $query->where('gender', $request->gender);
+    }
+
+    $outfits = $query->get();
+    $featuredOutfits = Outfit::take(5)->get();
+
+    return view('busana', compact('outfits', 'featuredOutfits'));
+}
+
 
     // ✅ Admin: Create new outfit
     public function createOutfit(Request $request)
@@ -124,11 +135,14 @@ class StudioBookingController extends Controller
         }
 
         Outfit::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image_path' => $imagePath,
-            'is_featured' => false,
+    'name' => $request->name,
+    'description' => $request->description,
+    'image_path' => $imagePath,
+    'type' => $request->type,
+    'gender' => $request->gender,
+    'is_featured' => false,
         ]);
+
 
         return back()->with('success', 'Outfit added!');
     }

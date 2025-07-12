@@ -1,42 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Outfit</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; }
-        input, textarea { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 15px; }
-        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-    </style>
-</head>
-<body>
-    <h2>✏️ Edit Outfit</h2>
+@extends('layouts.app')
+
+@section('title', 'Edit Outfit')
+
+@section('content')
+<div class="container mt-5">
+    <h2>Edit Outfit</h2>
 
     <form action="{{ route('outfit.update', $outfit->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <label>Name:</label>
-        <input type="text" name="name" value="{{ $outfit->name }}" required>
+        <div class="mb-3">
+            <label for="name" class="form-label">Outfit Name:</label>
+            <input type="text" name="name" value="{{ $outfit->name }}" class="form-control" required>
+        </div>
 
-        <label>Description:</label>
-        <textarea name="description">{{ $outfit->description }}</textarea>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea name="description" class="form-control">{{ $outfit->description }}</textarea>
+        </div>
 
-        <label>Status (e.g. Out of Stock):</label>
-        <input type="text" name="status" value="{{ $outfit->status }}">
+        <div class="mb-3">
+            <label>Category:</label><br>
+            @foreach(['fullset', 'accessories', 'top', 'bottom'] as $type)
+                <label>
+                    <input type="radio" name="type" value="{{ $type }}" {{ $outfit->type === $type ? 'checked' : '' }}>
+                    {{ ucfirst($type) }}
+                </label>
+            @endforeach
+        </div>
 
-        @if($outfit->image_path)
-            <p>Current Image:</p>
-            <img src="{{ asset('storage/' . $outfit->image_path) }}" style="height: 120px; border-radius: 8px;">
-        @endif
+        <div class="mb-3">
+            <label>Gender:</label><br>
+            <label><input type="radio" name="gender" value="male" {{ $outfit->gender === 'male' ? 'checked' : '' }}> Male</label>
+            <label><input type="radio" name="gender" value="female" {{ $outfit->gender === 'female' ? 'checked' : '' }}> Female</label>
+        </div>
 
-        <label>Replace Image:</label>
-        <input type="file" name="image">
+        <div class="mb-3">
+            <label>Status:</label><br>
+            <label><input type="radio" name="status" value="available" {{ $outfit->status !== 'not available' ? 'checked' : '' }}> Available</label>
+            <label><input type="radio" name="status" value="not available" {{ $outfit->status === 'not available' ? 'checked' : '' }}> Not Available</label>
+        </div>
 
-        <br><br>
-        <button type="submit">💾 Update Outfit</button>
+        <div class="mb-3">
+            @if($outfit->image_path)
+                <img src="{{ asset('storage/' . $outfit->image_path) }}" alt="Current Image" style="height: 100px; border-radius: 6px;"><br><br>
+            @endif
+            <label for="image">Replace Image (optional):</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Outfit</button>
+        <a href="{{ route('busana') }}" class="btn btn-secondary">Cancel</a>
     </form>
-
-    <br><a href="{{ route('busana') }}">← Back to Outfit Page</a>
-</body>
-</html>
+</div>
+@endsection
