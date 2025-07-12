@@ -6,6 +6,18 @@ use App\Http\Controllers\StudioBookingController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\BookingSearchController;
+use App\Http\Controllers\OutfitController;
+
+Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+
+
+// 📦 Booking Search (User Side)
+Route::get('/check-booking', [BookingSearchController::class, 'index'])->name('bookings.search');
+Route::post('/check-booking', [BookingSearchController::class, 'search'])->name('bookings.search.result');
+
+
+// 📝 Studio Booking Form Submission
+Route::post('/studio-booking', [StudioBookingController::class, 'store'])->name('studio.booking.store');
 
 // 🏠 Landing Page
 Route::get('/', function () {
