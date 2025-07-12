@@ -8,9 +8,7 @@ use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\BookingSearchController;
 use App\Http\Controllers\OutfitController;
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
 
 Route::get('/check-booking', [BookingSearchController::class, 'index'])->name('bookings.search');
@@ -21,9 +19,7 @@ Route::post('/check-booking', [BookingSearchController::class, 'search'])->name(
 Route::post('/studio-booking', [StudioBookingController::class, 'store'])->name('studio.booking.store');
 
 // 🏠 Default home route (landing page)
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', function () {return view('welcome');})->name('home');
 
 // 📄 View route for Studio booking page
 Route::view('/Studio', 'Studio')->name('Studio');
