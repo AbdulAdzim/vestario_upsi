@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Outfit;
 
 // 🏠 Landing Page
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', fn () => view('welcome'))->name('home');
 
 // 👤 Authenticated User Dashboard
 Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
@@ -26,18 +24,40 @@ Route::post('/check-booking', [BookingSearchController::class, 'search'])->name(
 Route::view('/Studio', 'Studio')->name('Studio');
 Route::post('/studio-booking', [StudioBookingController::class, 'store'])->name('studio.booking.store');
 
-// 👗 Busana (User & Admin View Logic in One Route)
+// 👗 Busana (Outfit Booking Page for Users and Admins)
 Route::get('/busana', function () {
-    $outfits = Outfit::all();
+    $type = request('type');
+    $gender = request('gender');
+
+    $outfits = \App\Models\Outfit::query();
+
+    if ($type && $type !== 'all') {
+        $outfits->where('type', $type);
+    }
+
+    if ($gender && $gender !== 'all') {
+        $outfits->where('gender', $gender);
+    }
+
+    $outfits = $outfits->get();
 
     if (Auth::check() && Auth::user()->role === 'admin') {
-        return view('admin.outfits.busana-admin', compact('outfits'));
-    } else {
-        return view('busana', compact('outfits'));
+        $bookings = \App\Models\OutfitBooking::with('outfit')->latest()->get();
+        return view('admin.outfits.busana-admin', compact('outfits', 'bookings'));
     }
+
+    return view('user.busana', compact('outfits'));
 })->name('busana');
 
-// 👗 Busana Booking (User Submits Booking)
+
+// 🧾 Store form input into session
+Route::post('/busana/confirm', [StudioBookingController::class, 'confirmPreview'])->name('busana.confirm');
+
+// ✅ Final confirmation page (submit)
+Route::post('/busana/final-submit', [StudioBookingController::class, 'finalSubmit'])->name('busana.final');
+
+
+// 📟 Outfit Booking Submission (User)
 Route::post('/busana/book', [StudioBookingController::class, 'storeBusanaBooking'])->name('busana.book');
 
 // ⚙️ Authenticated User Settings (Livewire Volt)
@@ -63,6 +83,9 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin/outfits/{id}/edit', [StudioBookingController::class, 'editOutfit'])->name('outfit.edit');
     Route::put('/busana/update-outfit/{id}', [StudioBookingController::class, 'updateOutfit'])->name('outfit.update');
     Route::delete('/busana/delete-outfit/{id}', [StudioBookingController::class, 'deleteOutfit'])->name('outfit.delete');
-    Route::get('/busana/edit-outfit/{id}', [StudioBookingController::class, 'editOutfit'])->name('outfit.edit');
-    Route::post('/busana/update-outfit/{id}', [StudioBookingController::class, 'updateOutfit'])->name('outfit.update');
+
+    Route::get('/admin/outfit-bookings', [StudioBookingController::class, 'viewOutfitBookings'])->name('admin.outfit.bookings');
+    Route::post('/admin/outfit-bookings/{id}/accept', [StudioBookingController::class, 'acceptOutfitBooking'])->name('admin.outfit.accept');
+    Route::post('/admin/outfit-bookings/{id}/reject', [StudioBookingController::class, 'rejectOutfitBooking'])->name('admin.outfit.reject');
+    Route::post('/admin/outfit-bookings/{id}/handle', [StudioBookingController::class, 'handleDecision'])->name('admin.outfit.handle');
 });
