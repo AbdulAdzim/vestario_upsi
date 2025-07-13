@@ -22,7 +22,7 @@ Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('
 Route::get('/check-booking', [BookingSearchController::class, 'index'])->name('bookings.search');
 Route::post('/check-booking', [BookingSearchController::class, 'search'])->name('bookings.search.result');
 
-// 🎬 Studio Booking (View & Submit)
+// 🎨 Studio Booking (View & Submit)
 Route::view('/Studio', 'Studio')->name('Studio');
 Route::post('/studio-booking', [StudioBookingController::class, 'store'])->name('studio.booking.store');
 
@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // 🔐 Auth Routes (Login, Register, etc.)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // 🛡️ Admin-Only Routes
 Route::middleware(['auth', 'is_admin'])->group(function () {
@@ -58,8 +58,10 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/admin/bookings/{id}/accept', [AdminBookingController::class, 'accept'])->name('admin.bookings.accept');
     Route::post('/admin/bookings/{id}/reject', [AdminBookingController::class, 'reject'])->name('admin.bookings.reject');
 
-    // 👕 Outfit CRUD (admin only)
+    // 👕 Outfit CRUD Routes
     Route::post('/busana/add-outfit', [StudioBookingController::class, 'createOutfit'])->name('outfit.create');
+    Route::get('/admin/outfits/{id}/edit', [StudioBookingController::class, 'editOutfit'])->name('outfit.edit');
+    Route::put('/busana/update-outfit/{id}', [StudioBookingController::class, 'updateOutfit'])->name('outfit.update');
     Route::delete('/busana/delete-outfit/{id}', [StudioBookingController::class, 'deleteOutfit'])->name('outfit.delete');
     Route::get('/busana/edit-outfit/{id}', [StudioBookingController::class, 'editOutfit'])->name('outfit.edit');
     Route::post('/busana/update-outfit/{id}', [StudioBookingController::class, 'updateOutfit'])->name('outfit.update');

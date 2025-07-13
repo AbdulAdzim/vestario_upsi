@@ -14,6 +14,7 @@ class Outfit extends Model
     'status',
     'image_path',
     'is_featured',
-];
+    'available_sizes', // JSON array of available sizes
+    ];
 
 }
