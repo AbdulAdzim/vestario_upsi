@@ -1,22 +1,17 @@
 @extends('layouts.visitor')
-
 @section('content')
 <div class="container mt-5">
     <!-- Header -->
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold">Vestario</h1>
-        <p class="text-muted">Welcome to your fashion booking dashboard!</p>
+        <p class="text-muted">Welcome to Vestario, all easy to book busana outfit and studio booking</p>
     </div>
-
-    <!-- Hero Image -->
+    <!-- Image -->
     <div class="mb-5 d-flex justify-content-center">
-        <img src="{{ asset('images/hero.png') }}" class="img-fluid rounded shadow" style="max-height: 400px;" alt="Hero Image">
+        <img src="{{ asset('favicon.svg') }}" class="img-fluid rounded shadow" style="max-height: 400px;" alt="logo">
     </div>
-
 </div>
 @endsection
-
-
 <!--<div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-es-lg rounded-ee-lg lg:rounded-ss-lg lg:rounded-ee-none">
