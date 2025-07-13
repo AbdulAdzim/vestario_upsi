@@ -15,7 +15,7 @@
 
     <style>
         body {
-            background-color: #bababa;
+            background-color: #b3b3b3;
             color: #333;
         }
         .navbar-brand {
