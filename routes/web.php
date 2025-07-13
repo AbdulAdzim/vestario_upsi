@@ -42,6 +42,8 @@ Route::post('/busana/book', [StudioBookingController::class, 'storeBusanaBooking
 // 👗 Busana Admin (Outfit Booking Page via Route Closure)
 Route::get('/busana', [StudioBookingController::class, 'indexOutfits'])->name('busana');
 
+// 👤 User Authentication (Livewire Volt)
+
 
 // ⚙️ Authenticated User Settings (Livewire Volt)
 Route::middleware(['auth'])->group(function () {
