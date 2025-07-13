@@ -173,9 +173,6 @@
 
         <button type="submit">Book Now</button>
     </form>
-
-    <button type="button" id="toggleBookingBtn" onclick="toggleBooking()">View My Booking</button>
-
     <div id="confirmation"></div>
 </div>
 

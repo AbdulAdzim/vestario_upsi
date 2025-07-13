@@ -27,7 +27,7 @@ class BookingSearchController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
         } elseif ($request->type === 'busana') {
-            $results = BusanaBooking::where('matrics', $request->matrics)
+            $results = BusanaBooking::where('matric_no', $request->matrics)
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
