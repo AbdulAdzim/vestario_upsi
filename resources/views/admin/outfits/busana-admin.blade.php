@@ -1,57 +1,109 @@
 @extends('layouts.admin')
 
+@section('title', 'Manage Busana & Bookings')
+
 @section('content')
 <style>
     body {
-        background-color: #f8f9fa;
+        background-color: #f4f6f8;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
     }
 
     .container {
-        max-width: 960px;
+        max-width: 1140px;
         margin: auto;
-        padding: 20px;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .outfit-card {
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 25px;
+        padding: 30px;
         background-color: #fff;
-        transition: 0.3s ease-in-out;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .outfit-card:hover {
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    .nav-tabs .nav-link {
+        padding: 10px 20px;
+        font-weight: 500;
+        border-radius: 8px 8px 0 0;
+        color: #555;
     }
 
-    .outfit-title {
-        font-size: 18px;
+    .nav-tabs .nav-link.active {
+        background-color: #0d6efd;
+        color: #fff;
         font-weight: 600;
-        color: #333;
-        margin-bottom: 5px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #2c3e50;
+    }
+
+    h3 {
+        margin-top: 20px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 1.2rem;
+    }
+
+    label {
+        font-weight: 500;
+        margin-top: 15px;
+        display: block;
     }
 
     input[type="text"],
     input[type="date"],
     textarea,
-    select {
+    select,
+    input[type="file"] {
         width: 100%;
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        box-sizing: border-box;
+        padding: 10px 14px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        background-color: #fdfdfd;
+        transition: border-color 0.2s;
     }
 
-    label {
+    input:focus,
+    textarea:focus,
+    select:focus {
+        border-color: #0d6efd;
+        outline: none;
+    }
+
+    .size-options label {
+        margin-right: 10px;
+        font-weight: normal;
+        margin-top: 5px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
         font-weight: 500;
-        margin-top: 10px;
-        display: block;
+        transition: background-color 0.2s;
+    }
+
+    .btn-success {
+        background-color: #198754;
+        color: white;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .btn-close {
+        float: right;
     }
 
     .status-badge {
@@ -73,106 +125,105 @@
         color: #842029;
     }
 
-    button {
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-weight: 600;
-        margin-top: 15px;
-        cursor: pointer;
+    .outfit-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
     }
 
-    button[type="submit"] {
-        background-color: #007bff;
-        color: white;
-        border: none;
-    }
-
-    button[type="submit"]:hover {
-        background-color: #0056b3;
-    }
-
-    a.edit-link {
-        margin-left: 10px;
-        color: blue;
-        text-decoration: underline;
-    }
-
-    img {
-        max-width: 100%;
+    .outfit-card {
+        border: 1px solid #e0e0e0;
         border-radius: 10px;
-        margin: 10px 0;
+        padding: 15px;
+        background-color: #fff;
+        transition: 0.3s ease-in-out;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
     }
 
-    hr {
-        margin: 40px 0 30px;
-    }
-
-    h3 {
-        margin-top: 30px;
+    .outfit-title {
+        font-size: 16px;
         font-weight: 600;
-        color: #333;
+        color: #2c3e50;
+        margin-bottom: 6px;
+    }
+
+    .edit-link {
+        color: #0d6efd;
+        margin-left: 10px;
+        font-size: 0.95rem;
+    }
+
+    table.table {
+        font-size: 14px;
+    }
+
+    th {
+        background-color: #f1f5f9;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    .alert-success {
+        margin-top: 15px;
     }
 </style>
+
 
 <div class="container mt-4">
     <h1 class="display-5 fw-bold mb-4">🧵 Manage Busana</h1>
 
-    <!-- ✅ Add New Outfit Form -->
-    <form action="{{ route('outfit.create') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 30px;">
-        @csrf
-        <h3>Add New Outfit</h3>
-        <input type="text" name="name" placeholder="Outfit Name" required>
-        <textarea name="description" placeholder="Description"></textarea>
+    <!-- 🔄 Tabs -->
+    <ul class="nav nav-tabs mb-3" id="busanaTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="add-tab" data-bs-toggle="tab" href="#addOutfit" role="tab">➕ Add Outfit</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="booking-tab" data-bs-toggle="tab" href="#viewBookings" role="tab">📋 View Bookings</a>
+        </li>
+    </ul>
 
-        <!-- ✅ Category (type) -->
-        <div class="form-row">
-            <label>Category:</label><br>
-            @foreach(['Fullset', 'Accessories', 'Top', 'Bottom'] as $type)
-                <label>
-                    <input type="radio" name="type" value="{{ strtolower($type) }}" required> {{ $type }}
-                </label>
-            @endforeach
+    <div class="tab-content" id="busanaTabContent">
+
+        <!-- ➕ Add Outfit Tab -->
+        <div class="tab-pane fade show active" id="addOutfit" role="tabpanel">
+            @include('admin.outfits.partials.add-outfit-form')
         </div>
 
-        <!-- ✅ Gender -->
-        <div class="form-row">
-            <label>Gender:</label><br>
-            <label><input type="radio" name="gender" value="male" required> Male</label>
-            <label><input type="radio" name="gender" value="female"> Female</label>
+        <!-- 📋 View Bookings Tab -->
+        <div class="tab-pane fade" id="viewBookings" role="tabpanel">
+            @include('admin.outfits.partials.view-bookings')
         </div>
 
-        <!-- ✅ Status -->
-        <div class="form-row">
-            <label>Status:</label><br>
-            <label><input type="radio" name="status" value="available" checked> Available</label>
-            <label><input type="radio" name="status" value="not available"> Not Available</label>
-        </div>
-
-        <input type="file" name="image">
-        <button type="submit">Add Outfit</button>
-    </form>
+    </div>
 
     <hr>
 
-    <!-- ✅ Manage Existing Outfits -->
+    <!-- ✅ Outfit List -->
     <h3>Outfit List</h3>
-    @foreach($outfits as $outfit)
-        <div class="outfit-card">
-            <strong>{{ $outfit->name }}</strong><br>
-            {{ $outfit->description }}<br>
-            @if($outfit->image_path)
-                <img src="{{ asset('storage/' . $outfit->image_path) }}" style="height: 80px; border-radius: 8px; margin-top: 10px;">
-            @endif
-            <span class="status-badge {{ $outfit->status === 'not available' ? 'not-available' : 'available' }}">
-                {{ ucfirst($outfit->status ?? 'available') }}
-            </span><br>
-            <form action="{{ route('outfit.delete', $outfit->id) }}" method="POST" onsubmit="return confirm('Delete this outfit?');" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" style="color: red;">Delete</button>
-            </form>
-            <a href="{{ route('outfit.edit', $outfit->id) }}" class="edit-link">Edit</a>
-        </div>
-    @endforeach
+    <div class="outfit-grid">
+        @foreach($outfits as $outfit)
+            <div class="outfit-card">
+                <strong class="outfit-title">{{ $outfit->name }}</strong>
+                <div>{{ $outfit->description }}</div>
+                @if($outfit->image_path)
+                    <img src="{{ asset('storage/' . $outfit->image_path) }}" style="height: 80px;">
+                @endif
+                <span class="status-badge {{ $outfit->status === 'not available' ? 'not-available' : 'available' }}">
+                    {{ ucfirst($outfit->status ?? 'available') }}
+                </span>
+                <form action="{{ route('outfit.delete', $outfit->id) }}" method="POST" onsubmit="return confirm('Delete this outfit?');" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" style="color: red;">Delete</button>
+                </form>
+                <a href="{{ route('outfit.edit', $outfit->id) }}" class="edit-link">Edit</a>
+            </div>
+        @endforeach
+    </div>
 </div>
 @endsection

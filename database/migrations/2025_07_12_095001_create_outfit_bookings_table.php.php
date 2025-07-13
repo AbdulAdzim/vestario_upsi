@@ -1,5 +1,8 @@
 <?php
 
+/** 2025_07_12_095001_create_outfit_bookings_table.php*/
+
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,8 +26,9 @@ return new class extends Migration
             $table->string('size');
             $table->date('booking_date');
             $table->date('return_date')->nullable();
-            $table->string('status')->nullable();
             $table->timestamps();
+            
+
 
             $table->foreign('outfit_id')->references('id')->on('outfits')->onDelete('cascade');
         });
