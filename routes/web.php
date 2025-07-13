@@ -64,6 +64,4 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::delete('/busana/delete-outfit/{id}', [StudioBookingController::class, 'deleteOutfit'])->name('outfit.delete');
     Route::get('/busana/edit-outfit/{id}', [StudioBookingController::class, 'editOutfit'])->name('outfit.edit');
     Route::post('/busana/update-outfit/{id}', [StudioBookingController::class, 'updateOutfit'])->name('outfit.update');
-    Route::get('/busana', [StudioBookingController::class, 'showBusanaPage'])->name('busana');
-
 });
