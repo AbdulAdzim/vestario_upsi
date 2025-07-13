@@ -15,7 +15,7 @@
 
     <style>
         body {
-            background-color: #f0f4f8;
+            background-color: #bababa;
             color: #333;
         }
         .navbar-brand {
@@ -25,12 +25,20 @@
         .nav-link {
             font-size: 1.1rem;
         }
+        .custom-navbar {
+        background-color: #d4edda; /* light green */
+        margin: 20px auto;
+        padding: 10px 20px;
+        border-radius: 1rem;
+        max-width: 99%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* custom shadow */        
+        }
     </style>
 </head>
 <body>
 
     <!-- Header Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light custom-navbar shadow rounded mb-4">
         <div class="container">
             <a class="navbar-brand" href="{{ route('dashboard') }}">Vestario</a>
 
