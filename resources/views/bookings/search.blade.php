@@ -14,7 +14,6 @@
             <div class="col-md-6">
                 <label for="type">Booking Type:</label>
                 <select name="type" id="type" class="form-control">
-                    <option value="">-- All Types --</option>
                     <option value="studio" {{ (old('type', $type ?? '') == 'studio') ? 'selected' : '' }}>Studio</option>
                     <option value="busana" {{ (old('type', $type ?? '') == 'busana') ? 'selected' : '' }}>Busana</option>
                 </select>

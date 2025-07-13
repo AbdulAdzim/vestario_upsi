@@ -27,7 +27,7 @@
     <!-- Header Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">Vestario</a>
+            <a class="navbar-brand" href="{{ route('dashboard') }}">Vestario</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -35,7 +35,6 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('Studio') }}">Studio</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('busana') }}">Busana</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('bookings.search') }}">Check Booking</a></li>

@@ -42,7 +42,43 @@ class StudioBookingController extends Controller
         return redirect()->back()->with('success', 'Booking submitted successfully!');
     }
 
-    // 👗 User: Submit Busana (Outfit) booking form
+    // ✅ Admin: View all studio bookings
+    public function indexStudioBookings()
+    {
+        $bookings = StudioBooking::all();
+        return view('admin.bookings.index', compact('bookings'));
+    }
+
+    // 🛠️ Admin: Accept or reject a studio booking
+    public function updateStatus($id, $status)
+    {
+        $booking = StudioBooking::findOrFail($id);
+        $booking->status = $status;
+        $booking->save();
+
+        return redirect()->route('admin.bookings')->with('success', 'Booking status updated.');
+    }
+
+    // 👗 User: View Busana (Outfit) booking page
+    public function showBusanaPage(Request $request)
+    {
+        $query = Outfit::query();
+
+        if ($request->has('type') && $request->type !== 'all') {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('gender') && $request->gender !== 'all') {
+            $query->where('gender', $request->gender);
+        }
+
+        $outfits = $query->get();
+        $featuredOutfits = (clone $query)->take(5)->get();
+
+        return view('busana-booking', compact('outfits', 'featuredOutfits'));
+    }
+
+    // 🎯 User: Submit Busana (Outfit) booking form
     public function storeBusanaBooking(Request $request)
     {
         $request->validate([
@@ -61,10 +97,7 @@ class StudioBookingController extends Controller
             if (!$size || !$bookingDate) continue;
 
             $parsedDate = Carbon::parse($bookingDate);
-
-            if ($parsedDate->lt(Carbon::today()->addDays(3))) {
-                continue; // must be at least 3 working days in advance
-            }
+            if ($parsedDate->lt(Carbon::today()->addDays(3))) continue;
 
             OutfitBooking::create([
                 'outfit_id' => $outfitId,
@@ -83,80 +116,47 @@ class StudioBookingController extends Controller
         return back()->with('success', 'Your outfit booking(s) have been submitted.');
     }
 
-    // 🛠️ Admin: View all studio bookings
-    public function index()
+    // ✅ Admin: View all outfits (Busana)
+    public function indexOutfits()
     {
-        $bookings = StudioBooking::all();
-        return view('admin.bookings.index', compact('bookings'));
+        $outfits = Outfit::all();
+
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return view('admin.outfits.busana-admin', compact('outfits'));
+        }
+
+        return view('busana-booking', compact('outfits'));
     }
-
-    // 🛠️ Admin: Accept or reject a studio booking
-    public function updateStatus($id, $status)
-    {
-        $booking = StudioBooking::findOrFail($id);
-        $booking->status = $status;
-        $booking->save();
-
-        return redirect()->route('admin.bookings')->with('success', 'Booking status updated.');
-    }
-
-    // 👗 User: View Busana (Outfit) booking page
-    public function showBusanaPage(Request $request)
-{
-    $query = Outfit::query();
-
-    // Filter by type
-    if ($request->has('type') && $request->type !== 'all') {
-        $query->where('type', $request->type);
-    }
-
-    // Filter by gender
-    if ($request->has('gender') && $request->gender !== 'all') {
-        $query->where('gender', $request->gender);
-    }
-
-    // Get filtered results
-    $outfits = $query->get();
-    $featuredOutfits = (clone $query)->take(5)->get();
-
-    return view('busana', compact('outfits', 'featuredOutfits'));
-}
-
-
-
 
     // ✅ Admin: Create new outfit
     public function createOutfit(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string',
-        'description' => 'nullable|string',
-        'type' => 'required|string',
-        'gender' => 'required|string',
-        'status' => 'required|string',
-        'image' => 'nullable|image|max:2048',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'type' => 'required|string',
+            'gender' => 'required|string',
+            'status' => 'required|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
 
-    $imagePath = null;
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('outfits', 'public');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('outfits', 'public');
+        }
+
+        Outfit::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'type' => $request->type,
+            'gender' => $request->gender,
+            'status' => $request->status,
+            'image_path' => $imagePath,
+            'is_featured' => false,
+        ]);
+
+        return back()->with('success', 'Outfit added!');
     }
-
-    Outfit::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'type' => $request->type,
-        'gender' => $request->gender,
-        'status' => $request->status,
-        'image_path' => $imagePath,
-        'is_featured' => false,
-    ]);
-
-    return back()->with('success', 'Outfit added!');
-}
-
-
-
 
     // 🗑️ Admin: Delete outfit
     public function deleteOutfit($id)
@@ -170,45 +170,42 @@ class StudioBookingController extends Controller
         return back()->with('success', 'Outfit deleted.');
     }
 
-    //admin edit outfit
+    // ✏️ Admin: Edit outfit
     public function editOutfit($id)
-{
-    $outfit = Outfit::findOrFail($id);
-    return view('admin.outfits.edit', compact('outfit'));
-}
-
-public function updateOutfit(Request $request, $id)
-{
-    $outfit = Outfit::findOrFail($id);
-
-    $request->validate([
-        'name' => 'required',
-        'description' => 'nullable',
-        'type' => 'required|string',
-        'gender' => 'required|string',
-        'status' => 'required|string',
-        'image' => 'nullable|image|max:2048',
-    ]);
-
-    // Handle image replacement
-    if ($request->hasFile('image')) {
-        if ($outfit->image_path) {
-            \Storage::disk('public')->delete($outfit->image_path);
-        }
-        $outfit->image_path = $request->file('image')->store('outfits', 'public');
+    {
+        $outfit = Outfit::findOrFail($id);
+        return view('admin.outfits.edit', compact('outfit'));
     }
 
-    // Assign all updated values
-    $outfit->name = $request->name;
-    $outfit->description = $request->description;
-    $outfit->type = $request->type;
-    $outfit->gender = $request->gender;
-    $outfit->status = $request->status;
+    public function updateOutfit(Request $request, $id)
+    {
+        $outfit = Outfit::findOrFail($id);
 
-    $outfit->save();
+        $request->validate([
+            'name' => 'required',
+            'description' => 'nullable',
+            'type' => 'required|string',
+            'gender' => 'required|string',
+            'status' => 'required|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
 
-    return redirect()->route('busana')->with('success', 'Outfit updated successfully!');
-}
+        if ($request->hasFile('image')) {
+            if ($outfit->image_path) {
+                Storage::disk('public')->delete($outfit->image_path);
+            }
+            $outfit->image_path = $request->file('image')->store('outfits', 'public');
+        }
 
+        $outfit->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'type' => $request->type,
+            'gender' => $request->gender,
+            'status' => $request->status,
+            'image_path' => $outfit->image_path
+        ]);
 
+        return redirect()->route('busana')->with('success', 'Outfit updated successfully!');
+    }
 }
