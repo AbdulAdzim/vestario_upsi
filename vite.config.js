@@ -19,9 +19,8 @@ export default defineConfig({
         https: true,
         host: '0.0.0.0', // Allows external access
         hmr: {
-            host: process.env.DEV_SERVER_HOST || 'localhost',
             protocol: 'wss',
-            port: 5173 // Explicit port for HMR
+            host: 'vestarioupsi.up.railway.app', // Explicit port for HMR
         }
     },
     build: {
