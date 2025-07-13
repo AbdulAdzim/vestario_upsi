@@ -210,9 +210,12 @@
             <div class="outfit-card">
                 <strong class="outfit-title">{{ $outfit->name }}</strong>
                 <div>{{ $outfit->description }}</div>
-                @if($outfit->image_path)
-                    <img src="{{ asset('storage/' . $outfit->image_path) }}" style="height: 80px;">
-                @endif
+                @if ($outfit->image_path)
+    <img src="{{ asset('storage/' . $outfit->image_path) }}" alt="Outfit Image" style="max-height: 80px; width: auto; margin-top: 10px;">
+@else
+    <p style="color: gray;">No image uploaded</p>
+@endif
+
                 <span class="status-badge {{ $outfit->status === 'not available' ? 'not-available' : 'available' }}">
                     {{ ucfirst($outfit->status ?? 'available') }}
                 </span>
