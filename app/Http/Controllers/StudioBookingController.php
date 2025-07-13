@@ -42,6 +42,7 @@ class StudioBookingController extends Controller
         return redirect()->back()->with('success', 'Booking submitted successfully!');
     }
 
+    
     // ✅ Admin: View all studio bookings
     public function indexStudioBookings()
     {

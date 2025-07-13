@@ -10,6 +10,15 @@ use App\Http\Controllers\OutfitController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Outfit;
 
+Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
+
+// 📦 Booking Search (User Side)
+Route::get('/check-booking', [BookingSearchController::class, 'index'])->name('bookings.search');
+Route::post('/check-booking', [BookingSearchController::class, 'search'])->name('bookings.search.result');
+
+// 📝 Studio Booking Form Submission
+Route::post('/studio-booking', [StudioBookingController::class, 'store'])->name('studio.booking.store');
+
 // 🏠 Landing Page
 Route::get('/', fn () => view('welcome'))->name('home');
 
@@ -59,6 +68,11 @@ Route::post('/busana/final-submit', [StudioBookingController::class, 'finalSubmi
 
 // 📟 Outfit Booking Submission (User)
 Route::post('/busana/book', [StudioBookingController::class, 'storeBusanaBooking'])->name('busana.book');
+
+// 👗 Busana Admin (Outfit Booking Page via Route Closure)
+Route::get('/busana', [StudioBookingController::class, 'indexOutfits'])->name('busana');
+
+// 👤 User Authentication (Livewire Volt)
 
 // ⚙️ Authenticated User Settings (Livewire Volt)
 Route::middleware(['auth'])->group(function () {

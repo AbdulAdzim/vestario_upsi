@@ -171,39 +171,83 @@
     .alert-success {
         margin-top: 15px;
     }
+
+    /* Add form toggle */
+    #addForm {
+        display: none;
+        margin-bottom: 30px;
+    }
+
+    #addForm.show {
+        display: block;
+    }
+
+    .add-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+    .add-btn:hover {
+        background-color: #218838;
+    }
 </style>
 
 
 <div class="container mt-4">
     <h1 class="display-5 fw-bold mb-4">🧵 Manage Busana</h1>
 
-    <!-- 🔄 Tabs -->
-    <ul class="nav nav-tabs mb-3" id="busanaTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="add-tab" data-bs-toggle="tab" href="#addOutfit" role="tab">➕ Add Outfit</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="booking-tab" data-bs-toggle="tab" href="#viewBookings" role="tab">📋 View Bookings</a>
-        </li>
-    </ul>
+    @if ($outfits->count() > 0)
+        <button class="add-btn" onclick="toggleAddForm()">+ Add New Outfit</button>
+    @endif
 
-    <div class="tab-content" id="busanaTabContent">
+    <!-- ✅ Add New Outfit Form -->
+    <form 
+        id="addForm" 
+        class="@if($outfits->count() == 0) show @endif"
+        action="{{ route('outfit.create') }}" 
+        method="POST" 
+        enctype="multipart/form-data">
+        @csrf
+        <h3>Add New Outfit</h3>
+        <input type="text" name="name" placeholder="Outfit Name" required>
+        <textarea name="description" placeholder="Description"></textarea>
 
-        <!-- ➕ Add Outfit Tab -->
-        <div class="tab-pane fade show active" id="addOutfit" role="tabpanel">
-            @include('admin.outfits.partials.add-outfit-form')
+        <!-- Category -->
+        <div class="form-row">
+            <label>Category:</label><br>
+            @foreach(['Fullset', 'Accessories', 'Top', 'Bottom'] as $type)
+                <label>
+                    <input type="radio" name="type" value="{{ strtolower($type) }}" required> {{ $type }}
+                </label>
+            @endforeach
         </div>
 
-        <!-- 📋 View Bookings Tab -->
-        <div class="tab-pane fade" id="viewBookings" role="tabpanel">
-            @include('admin.outfits.partials.view-bookings')
+        <!-- Gender -->
+        <div class="form-row">
+            <label>Gender:</label><br>
+            <label><input type="radio" name="gender" value="male" required> Male</label>
+            <label><input type="radio" name="gender" value="female"> Female</label>
         </div>
 
-    </div>
+        <!-- Status -->
+        <div class="form-row">
+            <label>Status:</label><br>
+            <label><input type="radio" name="status" value="available" checked> Available</label>
+            <label><input type="radio" name="status" value="not available"> Not Available</label>
+        </div>
+
+        <input type="file" name="image">
+        <button type="submit">Add Outfit</button>
+    </form>
 
     <hr>
 
-    <!-- ✅ Outfit List -->
     <h3>Outfit List</h3>
     <div class="outfit-grid">
         @foreach($outfits as $outfit)
@@ -226,4 +270,11 @@
         @endforeach
     </div>
 </div>
+
+<script>
+    function toggleAddForm() {
+        const form = document.getElementById('addForm');
+        form.classList.toggle('show');
+    }
+</script>
 @endsection

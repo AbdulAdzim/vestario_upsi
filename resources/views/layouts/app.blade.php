@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
     <title>{{ config('app.name', 'Vestario') }} - @yield('title', 'Home')</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS from CDN (HTTPS is OK) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Load Laravel Vite Assets (uses HTTPS if APP_URL is set properly) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         body {
@@ -74,7 +79,7 @@
         @yield('content')
     </main>
 
-    <!-- Bootstrap JS -->
+    <!-- Bootstrap JS from CDN (uses HTTPS) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

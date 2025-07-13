@@ -1,18 +1,48 @@
-import {
-    defineConfig
-} from 'vite';
+import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js'
+            ],
             refresh: true,
+            buildDirectory: 'build',
+            manifest: 'manifest.json' // Explicitly sets manifest name and location
         }),
         tailwindcss(),
     ],
     server: {
-        cors: true,
+        https: true,
+        host: '0.0.0.0', // Allows external access
+        hmr: {
+            protocol: 'wss',
+            host: 'vestarioupsi.up.railway.app', // Explicit port for HMR
+        }
     },
+    build: {
+        manifest: 'manifest.json', // Ensures manifest generation
+        outDir: 'public/build',
+        emptyOutDir: true,
+        rollupOptions: {
+            output: {
+                entryFileNames: 'assets/[name]-[hash].js',
+                chunkFileNames: 'assets/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash][extname]',
+                // Removed duplicate manifest: true (already specified above)
+            }
+        }
+    },
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+            '~': '/resources' // Additional helpful alias
+        }
+    },
+    optimizeDeps: {
+        include: ['laravel-vite-plugin'] // Improves build performance
+    }
 });
