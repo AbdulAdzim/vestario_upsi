@@ -11,9 +11,15 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
-        https: true, // Force HTTPS for dev server
-        cors: true,
+        https: true,          // ← Enforces HTTPS
+        hmr: { protocol: 'wss' } // ← Required with HTTPS
     },
-    // Optional: base path for production assets
-    base: '/build/',
+    build: {
+        manifest: true,
+        rollupOptions: {
+            output: {
+                assetFileNames: 'assets/[name]-[hash][extname]'
+            }
+        }
+    }
 });

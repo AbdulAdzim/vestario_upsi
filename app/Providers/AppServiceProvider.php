@@ -7,21 +7,16 @@ use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        if (env('APP_ENV') === 'production') {
-        URL::forceScheme('https');
-    }
+        // Force HTTPS in production or when explicitly configured
+        if ($this->app->environment('production') || config('app.force_https')) {
+            URL::forceScheme('https');
+        }
     }
 }
