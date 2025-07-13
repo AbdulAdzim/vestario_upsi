@@ -12,11 +12,9 @@ use App\Models\Outfit;
 
 Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
-
 // 📦 Booking Search (User Side)
 Route::get('/check-booking', [BookingSearchController::class, 'index'])->name('bookings.search');
 Route::post('/check-booking', [BookingSearchController::class, 'search'])->name('bookings.search.result');
-
 
 // 📝 Studio Booking Form Submission
 Route::post('/studio-booking', [StudioBookingController::class, 'store'])->name('studio.booking.store');
@@ -43,7 +41,6 @@ Route::post('/busana/book', [StudioBookingController::class, 'storeBusanaBooking
 Route::get('/busana', [StudioBookingController::class, 'indexOutfits'])->name('busana');
 
 // 👤 User Authentication (Livewire Volt)
-
 
 // ⚙️ Authenticated User Settings (Livewire Volt)
 Route::middleware(['auth'])->group(function () {

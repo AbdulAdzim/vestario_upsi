@@ -112,19 +112,53 @@
         font-weight: 600;
         color: #333;
     }
+
+    /* Add form toggle */
+    #addForm {
+        display: none;
+        margin-bottom: 30px;
+    }
+
+    #addForm.show {
+        display: block;
+    }
+
+    .add-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+    .add-btn:hover {
+        background-color: #218838;
+    }
 </style>
 
 <div class="container mt-4">
     <h1 class="display-5 fw-bold mb-4">🧵 Manage Busana</h1>
 
+    @if ($outfits->count() > 0)
+        <button class="add-btn" onclick="toggleAddForm()">+ Add New Outfit</button>
+    @endif
+
     <!-- ✅ Add New Outfit Form -->
-    <form action="{{ route('outfit.create') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 30px;">
+    <form 
+        id="addForm" 
+        class="@if($outfits->count() == 0) show @endif"
+        action="{{ route('outfit.create') }}" 
+        method="POST" 
+        enctype="multipart/form-data">
         @csrf
         <h3>Add New Outfit</h3>
         <input type="text" name="name" placeholder="Outfit Name" required>
         <textarea name="description" placeholder="Description"></textarea>
 
-        <!-- ✅ Category (type) -->
+        <!-- Category -->
         <div class="form-row">
             <label>Category:</label><br>
             @foreach(['Fullset', 'Accessories', 'Top', 'Bottom'] as $type)
@@ -134,14 +168,14 @@
             @endforeach
         </div>
 
-        <!-- ✅ Gender -->
+        <!-- Gender -->
         <div class="form-row">
             <label>Gender:</label><br>
             <label><input type="radio" name="gender" value="male" required> Male</label>
             <label><input type="radio" name="gender" value="female"> Female</label>
         </div>
 
-        <!-- ✅ Status -->
+        <!-- Status -->
         <div class="form-row">
             <label>Status:</label><br>
             <label><input type="radio" name="status" value="available" checked> Available</label>
@@ -154,7 +188,6 @@
 
     <hr>
 
-    <!-- ✅ Manage Existing Outfits -->
     <h3>Outfit List</h3>
     @foreach($outfits as $outfit)
         <div class="outfit-card">
@@ -175,4 +208,11 @@
         </div>
     @endforeach
 </div>
+
+<script>
+    function toggleAddForm() {
+        const form = document.getElementById('addForm');
+        form.classList.toggle('show');
+    }
+</script>
 @endsection
