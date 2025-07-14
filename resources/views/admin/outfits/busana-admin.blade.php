@@ -175,7 +175,7 @@
 
 
 <div class="container mt-4">
-    <h1 class="display-5 fw-bold mb-4">🧵 Manage Busana</h1>
+    <h1 class="display-5 fw-bold mb-4">Manage Outfit</h1>
 
     <!-- 🔄 Tabs -->
     <ul class="nav nav-tabs mb-3" id="busanaTab" role="tablist">
