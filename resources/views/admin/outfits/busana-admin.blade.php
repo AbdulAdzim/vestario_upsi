@@ -219,7 +219,7 @@
 
             <!-- Image -->
             @if ($outfit->image_path)
-                <img src="{{ asset('storage/' . $outfit->image_path) }}" 
+                <img src="{{ $outfit->image_path }}" 
                     alt="Outfit Image" 
                     style="max-height: 150px; width: auto; margin-top: 10px;">
             @else

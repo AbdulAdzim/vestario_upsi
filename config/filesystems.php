@@ -62,6 +62,13 @@ return [
 
     ],
 
+    'cloudinary' => [
+            'driver' => 'cloudinary',
+            'api_key' => env('496368813119265'),
+            'api_secret' => env('RIMBseL9oBNrSHXerOJQZjclQDw'),
+            'cloud_name' => env('dmlkum8fq'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Symbolic Links

@@ -9,6 +9,7 @@ use App\Models\OutfitBooking;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;    
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class StudioBookingController extends Controller
 {
@@ -80,18 +81,16 @@ class StudioBookingController extends Controller
 
     // 👗 Admin: View outfits (busana)
     public function indexOutfits()
-        {
+    {
         $outfits = Outfit::all();
 
         if (auth()->check() && auth()->user()->role === 'admin') {
-                 $bookings = OutfitBooking::with('outfit')->latest()->get();
-                return view('admin.outfits.busana-admin', compact('outfits', 'bookings'));
-            }
-
-            return view('user.busana', compact('outfits'));
+            $bookings = OutfitBooking::with('outfit')->latest()->get();
+            return view('admin.outfits.busana-admin', compact('outfits', 'bookings'));
         }
 
-
+        return view('user.busana', compact('outfits'));
+    }
 
     // 🧾 Submit user booking for busana
     public function storeBusanaBooking(Request $request)
@@ -145,6 +144,7 @@ class StudioBookingController extends Controller
     // ➕ Admin: Create new outfit
     public function createOutfit(Request $request)
     {
+        //dd(config('cloudinary'));
         $request->validate([
             'name' => 'required|string',
             'description' => 'nullable|string',
@@ -154,10 +154,30 @@ class StudioBookingController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $imagePath = $request->hasFile('image')
-            ? $request->file('image')->store('outfits', 'public')
-            : null;
+        $imagePath = null;
 
+        // ✅ Step 1: Check Cloudinary config before uploading
+        $config = config('cloudinary');
+        if (!isset($config['cloud']['cloud_name'], $config['cloud']['api_key'], $config['cloud']['api_secret'])) {
+            abort(500, '❌ Cloudinary configuration is missing.');
+        }
+
+        $cloudinary = new \Cloudinary\Cloudinary([
+            'cloud' => [
+                'cloud_name' => $config['cloud']['cloud_name'],
+                'api_key'    => $config['cloud']['api_key'],
+                'api_secret' => $config['cloud']['api_secret'],
+            ],
+        ]);
+
+        // ✅ Step 2: Upload image if provided
+        if ($request->hasFile('image')) {
+            $uploadedFile = $request->file('image');
+            $uploadResult = $cloudinary->uploadApi()->upload($uploadedFile->getRealPath());
+            $imagePath = $uploadResult['secure_url'] ?? null;
+        }
+
+        // ✅ Step 3: Create outfit entry
         Outfit::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -171,8 +191,7 @@ class StudioBookingController extends Controller
 
         // Inside createOutfit()
         return back()->with('success', 'Outfit added successfully.');
-
-        }
+    }
 
     // 🗑️ Admin: Delete outfit
     public function deleteOutfit($id)
@@ -208,10 +227,10 @@ class StudioBookingController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($outfit->image_path) {
-                Storage::disk('public')->delete($outfit->image_path);
-            }
-            $outfit->image_path = $request->file('image')->store('outfits', 'public');
+            $uploadedImage = Cloudinary::upload($request->file('image')->getRealPath());
+            $imageUrl = $uploadedImage->getSecurePath();
+
+            $outfit->image_path = $imageUrl;
         }
 
         $outfit->update([
@@ -236,148 +255,143 @@ class StudioBookingController extends Controller
 
     // ✅ Admin: Accept outfit booking
     public function acceptOutfitBooking($id)
-{
-    $booking = \App\Models\OutfitBooking::findOrFail($id);
-    $booking->status = 'accepted';
-    $booking->save();
-
-    return back()->with('booking_success', '✅ Booking accepted successfully.');
-}
-
-public function rejectOutfitBooking($id)
-{
-    $booking = \App\Models\OutfitBooking::findOrFail($id);
-    $booking->status = 'rejected';
-    $booking->save();
-
-    return back()->with('booking_success', '❌ Booking rejected.');
-}
-
-public function handleDecision(Request $request, $id)
-{
-    $booking = OutfitBooking::findOrFail($id);
-    $decision = $request->input('decision');
-
-    if (in_array($decision, ['accepted', 'rejected'])) {
-        $booking->status = $decision;
+    {
+        $booking = \App\Models\OutfitBooking::findOrFail($id);
+        $booking->status = 'accepted';
         $booking->save();
 
-        return redirect()->back()->with('success', "Booking has been {$decision}.");
+        return back()->with('booking_success', '✅ Booking accepted successfully.');
     }
 
-    return redirect()->back()->with('error', 'Invalid decision.');
-}
+    public function rejectOutfitBooking($id)
+    {
+        $booking = \App\Models\OutfitBooking::findOrFail($id);
+        $booking->status = 'rejected';
+        $booking->save();
 
-// 👀 Preview booking confirmation (before final submit)
-public function confirmPreview(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string',
-        'matric_no' => 'required|string',
-        'club' => 'required|string',
-        'purpose' => 'required|string',
-        'phone' => 'required|string',
-        'sizes' => 'required|array',
-        'dates' => 'required|array',
-        'returns' => 'required|array',
-    ]);
+        return back()->with('booking_success', '❌ Booking rejected.');
+    }
 
-    $filteredSizes = [];
-    $filteredDates = [];
-    $filteredReturns = [];
+    public function handleDecision(Request $request, $id)
+    {
+        $booking = OutfitBooking::findOrFail($id);
+        $decision = $request->input('decision');
 
-    foreach ($validated['sizes'] as $id => $size) {
-        if ($size && !empty($validated['dates'][$id]) && !empty($validated['returns'][$id])) {
-            $filteredSizes[$id] = $size;
-            $filteredDates[$id] = $validated['dates'][$id];
-            $filteredReturns[$id] = $validated['returns'][$id];
+        if (in_array($decision, ['accepted', 'rejected'])) {
+            $booking->status = $decision;
+            $booking->save();
+
+            return redirect()->back()->with('success', "Booking has been {$decision}.");
         }
+
+        return redirect()->back()->with('error', 'Invalid decision.');
     }
 
-    if (empty($filteredSizes)) {
-        return redirect()->route('busana')->with('error', '⚠️ Please select at least one outfit with all required fields.');
-    }
+    // 👀 Preview booking confirmation (before final submit)
+    public function confirmPreview(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'matric_no' => 'required|string',
+            'club' => 'required|string',
+            'purpose' => 'required|string',
+            'phone' => 'required|string',
+            'sizes' => 'required|array',
+            'dates' => 'required|array',
+            'returns' => 'required|array',
+        ]);
 
-    $cleanData = [
-        'name' => $validated['name'],
-        'matric_no' => $validated['matric_no'],
-        'club' => $validated['club'],
-        'purpose' => $validated['purpose'],
-        'phone' => $validated['phone'],
-        'sizes' => $filteredSizes,
-        'dates' => $filteredDates,
-        'returns' => $filteredReturns,
-    ];
+        $filteredSizes = [];
+        $filteredDates = [];
+        $filteredReturns = [];
 
-    session(['booking_preview' => $cleanData]);
-
-    $outfits = Outfit::whereIn('id', array_keys($filteredSizes))->get();
-
-    return view('user.busana-confirm', [
-        'data' => $cleanData,
-        'outfits' => $outfits,
-    ]);
-}
-
-
-// ✅ Final submit (after confirmation)
-public function finalSubmit(Request $request)
-{
-    $data = session('booking_preview');
-
-    if (!$data) {
-        return redirect()->route('busana')->with('error', 'Session expired. Please submit again.');
-    }
-
-    $userId = auth()->id();
-    $hasBooking = false;
-
-    foreach ($data['sizes'] as $outfitId => $size) {
-        $outfit = \App\Models\Outfit::find($outfitId);
-
-        if (!$outfit) continue;
-
-        $bookingDate = $data['dates'][$outfitId] ?? null;
-        $returnDate = $data['returns'][$outfitId] ?? null;
-
-        $isAccessories = $outfit->type === 'accessories';
-
-        // Allow booking if accessories OR size is selected
-        if ($bookingDate && $returnDate && ($isAccessories || $size)) {
-            \App\Models\OutfitBooking::create([
-                'outfit_id' => $outfitId,
-                'user_id' => $userId,
-                'name' => $data['name'],
-                'matric_no' => $data['matric_no'],
-                'club' => $data['club'],
-                'purpose' => $data['purpose'],
-                'phone' => $data['phone'],
-                'size' => $isAccessories ? 'N/A' : $size,
-                'booking_date' => $bookingDate,
-                'return_date' => $returnDate,
-                'status' => 'pending',
-            ]);
-            $hasBooking = true;
+        foreach ($validated['sizes'] as $id => $size) {
+            if ($size && !empty($validated['dates'][$id]) && !empty($validated['returns'][$id])) {
+                $filteredSizes[$id] = $size;
+                $filteredDates[$id] = $validated['dates'][$id];
+                $filteredReturns[$id] = $validated['returns'][$id];
+            }
         }
+
+        if (empty($filteredSizes)) {
+            return redirect()->route('busana')->with('error', '⚠️ Please select at least one outfit with all required fields.');
+        }
+
+        $cleanData = [
+            'name' => $validated['name'],
+            'matric_no' => $validated['matric_no'],
+            'club' => $validated['club'],
+            'purpose' => $validated['purpose'],
+            'phone' => $validated['phone'],
+            'sizes' => $filteredSizes,
+            'dates' => $filteredDates,
+            'returns' => $filteredReturns,
+        ];
+
+        session(['booking_preview' => $cleanData]);
+
+        $outfits = Outfit::whereIn('id', array_keys($filteredSizes))->get();
+
+        return view('user.busana-confirm', [
+            'data' => $cleanData,
+            'outfits' => $outfits,
+        ]);
     }
 
-    session()->forget('booking_preview');
+    // ✅ Final submit (after confirmation)
+    public function finalSubmit(Request $request)
+    {
+        $data = session('booking_preview');
 
-    return $hasBooking
-        ? redirect()->route('busana')->with('success', '✅ Booking submitted successfully!')
-        : redirect()->route('busana')->with('error', '❌ No valid outfit booking found.');
-}
+        if (!$data) {
+            return redirect()->route('busana')->with('error', 'Session expired. Please submit again.');
+        }
 
+        $userId = auth()->id();
+        $hasBooking = false;
 
-// View image for welcome page
-public function dashboard()
-{
-    // Example: Load all outfits or filter as needed
-    $outfits = \App\Models\Outfit::select('name', 'image_path')->get();
+        foreach ($data['sizes'] as $outfitId => $size) {
+            $outfit = \App\Models\Outfit::find($outfitId);
 
-    return view('dashboard', [
-        'outfits' => $outfits,
-    ]);
-}
+            if (!$outfit) continue;
 
-}// End of StudioBookingController
+            $bookingDate = $data['dates'][$outfitId] ?? null;
+            $returnDate = $data['returns'][$outfitId] ?? null;
+
+            $isAccessories = $outfit->type === 'accessories';
+
+            if ($bookingDate && $returnDate && ($isAccessories || $size)) {
+                \App\Models\OutfitBooking::create([
+                    'outfit_id' => $outfitId,
+                    'user_id' => $userId,
+                    'name' => $data['name'],
+                    'matric_no' => $data['matric_no'],
+                    'club' => $data['club'],
+                    'purpose' => $data['purpose'],
+                    'phone' => $data['phone'],
+                    'size' => $isAccessories ? 'N/A' : $size,
+                    'booking_date' => $bookingDate,
+                    'return_date' => $returnDate,
+                    'status' => 'pending',
+                ]);
+                $hasBooking = true;
+            }
+        }
+
+        session()->forget('booking_preview');
+
+        return $hasBooking
+            ? redirect()->route('busana')->with('success', '✅ Booking submitted successfully!')
+            : redirect()->route('busana')->with('error', '❌ No valid outfit booking found.');
+    }
+
+    // View image for welcome page
+    public function dashboard()
+    {
+        $outfits = \App\Models\Outfit::select('name', 'image_path')->get();
+
+        return view('dashboard', [
+            'outfits' => $outfits,
+        ]);
+    }
+} // End of StudioBookingController
