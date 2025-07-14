@@ -10,7 +10,7 @@
 
     <style>
         body {
-            background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background: url('https://permohonanupu.com/wp-content/uploads/2023/02/Bangunan-Suluh-Budiman2-1024x686-1.jpeg') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
@@ -73,6 +73,7 @@
     <!-- Header Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
+            <img src="{{ asset('favicon.svg') }}" alt="icon" class="navbar-brand me-2" style="width: 50px; height: 50px;">
             <a class="navbar-brand fw-bold" href="{{ route('home') }}">Vestario</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
