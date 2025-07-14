@@ -15,6 +15,8 @@ Route::get('/', fn () => view('welcome'))->name('home');
 
 // 👤 Authenticated User Dashboard
 Route::view('/dashboard', 'dashboard')->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [StudioBookingController::class, 'dashboard'])->name('dashboard');
+
 
 // 📦 Booking Search (User Side)
 Route::get('/check-booking', [BookingSearchController::class, 'index'])->name('bookings.search');
