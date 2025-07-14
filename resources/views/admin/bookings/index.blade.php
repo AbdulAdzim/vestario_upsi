@@ -37,7 +37,5 @@
             @endif
         </div>
     @endforeach
-
-    <a href="{{ route('admin.bookings') }}" class="btn btn-primary mt-4">Manage Bookings</a>
 </div>
 @endsection

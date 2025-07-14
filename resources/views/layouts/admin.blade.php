@@ -38,7 +38,6 @@
                     <li class="nav-item mb-2"><a href="{{ route('admin.dashboard') }}" class="nav-link">🏠 Home</a></li>
                     <li class="nav-item mb-2"><a href="{{ route('admin.bookings') }}" class="nav-link">🎵 Manage Studio</a></li>
                     <li class="nav-item mb-2"><a href="{{ route('busana') }}" class="nav-link">👘 Manage Busana</a></li>
-                    <li class="nav-item mb-2"><a href="{{ route('bookings.search') }}" class="nav-link">🔍 Check Booking</a></li>
 
                     <hr>
 

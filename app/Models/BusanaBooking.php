@@ -11,4 +11,9 @@ class BusanaBooking extends Model
 
     // Optionally specify the table name if it's not the default
     protected $table = 'outfit_bookings';
+
+    public function outfit()
+{
+    return $this->belongsTo(\App\Models\Outfit::class, 'outfit_id');
+}
 }

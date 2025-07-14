@@ -6,61 +6,112 @@
     </div>
 @endif
 
-<!-- ✅ Add New Outfit Form -->
-<form id="addOutfitForm" action="{{ route('outfit.create') }}" method="POST" enctype="multipart/form-data" style="margin-bottom: 30px;">
+<!-- ✅ Clean Add Outfit Form -->
+<form id="addOutfitForm" action="{{ route('outfit.create') }}" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-sm" style="max-width: 600px; margin: 0 auto 40px;">
 
     @csrf
-    <h3>Add New Outfit</h3>
-    <input type="text" name="name" placeholder="Outfit Name" required>
-    <textarea name="description" placeholder="Description"></textarea>
+    <h3 class="mb-4 text-center fw-bold">Add New Outfit</h3>
 
-    <label>Category:</label>
-    @foreach(['Fullset', 'Accessories', 'Top', 'Bottom'] as $type)
-        <label><input type="radio" name="type" value="{{ strtolower($type) }}" required> {{ $type }}</label>
-    @endforeach
+    <!-- Name -->
+    <div class="mb-3">
+        <label for="name" class="form-label">Outfit Name</label>
+        <input type="text" name="name" class="form-control" placeholder="e.g. Baju Kurung Tradisional" required>
+    </div>
 
-    <label>Gender:</label>
-    <label><input type="radio" name="gender" value="male" required> Male</label>
-    <label><input type="radio" name="gender" value="female"> Female</label>
+    <!-- Description -->
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" rows="3" class="form-control" placeholder="Describe the outfit..."></textarea>
+    </div>
 
-    <label>Status:</label>
-    <label><input type="radio" name="status" value="available" checked> Available</label>
-    <label><input type="radio" name="status" value="not available"> Not Available</label>
+    <!-- Category -->
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <div class="d-flex gap-3 flex-wrap">
+            @foreach(['Fullset', 'Accessories', 'Top', 'Bottom'] as $type)
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="type" id="type_{{ $type }}" value="{{ strtolower($type) }}" required>
+                    <label class="form-check-label" for="type_{{ $type }}">{{ $type }}</label>
+                </div>
+            @endforeach
+        </div>
+    </div>
 
-    <label>Available Sizes:</label>
-    <div class="size-options">
+    <!-- Gender -->
+    <div class="mb-3">
+        <label class="form-label">Gender</label>
+        <div class="d-flex gap-3">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
+                <label class="form-check-label" for="male">Male</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                <label class="form-check-label" for="female">Female</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status -->
+    <div class="mb-3">
+        <label class="form-label">Availability Status</label>
+        <div class="d-flex gap-3">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="available" value="available" checked>
+                <label class="form-check-label" for="available">Available</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="not_available" value="not available">
+                <label class="form-check-label" for="not_available">Not Available</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ Available Sizes -->
+<div class="mb-3" id="sizeSection">
+    <label class="form-label">Available Sizes</label>
+    <div class="d-flex gap-3 flex-wrap">
         @foreach(['S', 'M', 'L', 'XL', 'XXL'] as $size)
-            <label><input type="checkbox" name="available_sizes[]" value="{{ $size }}"> {{ $size }}</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="available_sizes[]" id="size_{{ $size }}" value="{{ $size }}">
+                <label class="form-check-label" for="size_{{ $size }}">{{ $size }}</label>
+            </div>
         @endforeach
     </div>
+</div>
 
-    <div class="mt-3">
-        <label>Upload Image:</label>
-        <input type="file" name="image" class="form-control mb-3">
+
+    <!-- Image Upload -->
+    <div class="mb-4">
+        <label for="image" class="form-label">Upload Outfit Image</label>
+        <input type="file" name="image" class="form-control" accept="image/*">
     </div>
 
-    <div class="mt-4">
-        <button type="submit" class="btn btn-primary w-100" style="font-weight: 600; padding: 10px 0;">
-            Submit New Outfit
-        </button>
-    </div>
-
-    <script>
-    document.getElementById('addOutfitForm').addEventListener('submit', function (e) {
-        const checkboxes = document.querySelectorAll('#addOutfitForm input[name="available_sizes[]"]');
-        let checked = false;
-
-        checkboxes.forEach(cb => {
-            if (cb.checked) checked = true;
-        });
-
-        if (!checked) {
-            e.preventDefault();
-            alert("⚠️ Please select at least one available size.");
-        }
-    });
-</script>
-
-
-
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary w-100 fw-semibold py-2">
+        Submit New Outfit
+    </button>
 </form>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const typeRadios = document.querySelectorAll('input[name="type"]');
+    const sizeSection = document.getElementById('sizeSection');
+
+    function toggleSizeSection() {
+        const selectedType = document.querySelector('input[name="type"]:checked');
+        if (selectedType && selectedType.value === 'accessories') {
+            sizeSection.style.display = 'none';
+        } else {
+            sizeSection.style.display = '';
+        }
+    }
+
+    // Run on load
+    toggleSizeSection();
+
+    // Listen for changes
+    typeRadios.forEach(radio => {
+        radio.addEventListener('change', toggleSizeSection);
+    });
+});
+</script>

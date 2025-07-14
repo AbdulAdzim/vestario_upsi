@@ -24,39 +24,56 @@
     </form>
 
     @isset($results)
-        <h4>Search Results</h4>
-        @if ($results->count() > 0)
-            <table class="table table-bordered">
-                <thead>
+    <h4>Search Results</h4>
+    @if ($results->count() > 0)
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Matrics</th>
+
+                    @if ($type === 'studio')
+                        <th>Studio Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    @elseif ($type === 'busana')
+                        <th>Outfit Name</th>
+                        <th>Booking Date</th>
+                        <th>Return Date</th>
+                    @endif
+
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($results as $booking)
                     <tr>
-                        <th>Booking ID</th>
-                        <th>Type</th>
-                        <th>Reason</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Status</th>
+                        {{-- Matrics --}}
+                        <td>
+                            {{ $type === 'studio' ? $booking->matrics : $booking->matric_no }}
+                        </td>
+
+                        @if ($type === 'studio')
+                            <td>{{ $booking->studios }}</td>
+                            <td>{{ $booking->start_date }}</td>
+                            <td>{{ $booking->end_date }}</td>
+                        @elseif ($type === 'busana')
+                            <td>{{ $booking->outfit->name ?? 'N/A' }}</td>
+                            <td>{{ $booking->booking_date }}</td>
+                            <td>{{ $booking->return_date }}</td>
+                        @endif
+
+                        <td>
+                            <span class="badge bg-{{ $booking->status === 'accepted' ? 'success' : ($booking->status === 'rejected' ? 'danger' : 'warning') }}">
+                                {{ ucfirst($booking->status) }}
+                            </span>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($results as $booking)
-                        <tr>
-                            <td>{{ $booking->id }}</td>
-                            <td>{{ ucfirst($booking->type) }}</td>
-                            <td>{{ $booking->reason }}</td>
-                            <td>{{ $booking->start_date }} - {{ $booking->end_date }}</td>
-                            <td>{{ $booking->time_slot }}</td>
-                            <td>
-                                <span class="badge bg-{{ $booking->status === 'accepted' ? 'success' : ($booking->status === 'rejected' ? 'danger' : 'warning') }}">
-                                    {{ ucfirst($booking->status) }}
-                                </span>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @else
-            <p>No bookings found for the given information.</p>
-        @endif
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>No bookings found for the given information.</p>
+    @endif
     @endisset
 </div>
 @endsection

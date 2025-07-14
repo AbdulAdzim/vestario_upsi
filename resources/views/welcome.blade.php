@@ -1,33 +1,67 @@
 @extends('layouts.visitor')
 
 @section('content')
-<div class="relative min-h-screen flex items-center justify-center px-4 py-16 bg-white dark:bg-neutral-900 overflow-hidden">
+<div class="container mt-5">
 
-    <!-- Subtle Background Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-br from-zinc-100 to-white dark:from-neutral-800 dark:to-neutral-900 opacity-80"></div>
+    <!-- Header with Logo -->
+    <header class="text-center mb-4">
+        <a href="https://kebudayaan.upsi.edu.my" target="_blank">
+            <img src="{{ asset('upsi.png') }}" alt="UPSI Logo"  class="img-fluid mb-3">
+        </a>
+        <h1>Vestario</h1>
+        <p>The cooperation between PUSKEB and Vestario enhances the management of traditional outfit bookings.</p>
+</header>
 
-    <!-- Abstract SVG Pattern (dots) -->
-    <div class="absolute inset-0 bg-[url('/images/pattern-dots.svg')] bg-center bg-repeat opacity-5 dark:opacity-10 pointer-events-none"></div>
-
-    <!-- Main Content -->
-    <div class="relative z-10 w-full max-w-3xl text-center space-y-10">
-        
-        <!-- Logo -->
-        <div class="flex justify-center">
-            <img src="{{ asset('favicon.svg') }}" alt="Vestario Logo" class="h-16 w-16 rounded-sm">
-        </div>
-
-        <!-- App Name & Tagline -->
-        <div>
-            <h1 class="text-3xl md:text-4xl font-semibold text-zinc-800 dark:text-white">Vestario</h1>
-            <p class="mt-2 text-zinc-500 dark:text-zinc-400 text-base md:text-lg">
-                Effortless booking of traditional Busana outfits and studio rentals.
-            </p>
-        </div>
-
-        
-
+    <!-- Poster Section -->
+    <div class="text-center mt-5">
+    <div class="w-100 mt-3">
+        <img src="{{ asset('poster.png') }}" alt="Poster" class="img-fluid rounded shadow w-100">
     </div>
+    </div>   
+
+    <!-- Gallery Section -->
+    <div class="mt-5">
+    <h3 class="text-center">Club</h3>
+
+    <div class="outfit-grid">
+        <div class="outfit-card">
+            <a href="https://kebudayaan.upsi.edu.my/vocal-arts-group/" target="_blank">
+                <img src="https://kebudayaan.upsi.edu.my/wp-content/uploads/elementor/thumbs/SENI-SUARA2-o6edfmkucf161lnceby9u52m1ioxtax08idqacfe8g.png" alt="Club" class="gallery-img mb-2">
+            </a>
+            <div class="outfit-title">KELAB SENI SUARA</div>
+
+            <a href="https://kebudayaan.upsi.edu.my/upsi-combo-club-2/" target="_blank">
+                <img src="https://kebudayaan.upsi.edu.my/wp-content/uploads/2019/04/kelab-kombo-logo-01-01-768x497.png" alt="Club" class="gallery-img mb-2">
+            </a>
+            <div class="outfit-title">KELAB KOMBO UPSI</div>
+        </div>
+
+        <div class="outfit-card">
+            <a href="https://kebudayaan.upsi.edu.my/seni-warisan-cenderawasih-club/" target="_blank">
+                <img src="https://kebudayaan.upsi.edu.my/wp-content/uploads/2018/12/cenderawasih_new-300x295.png" alt="Club" class="gallery-img mb-2">
+            </a>
+            <div class="outfit-title">KELAB DIKIR BARAT WARISAN CENDERAWASIH</div>
+
+            <a href="https://kebudayaan.upsi.edu.my/gamelan-margamas-club/" target="_blank">
+                <img src="https://kebudayaan.upsi.edu.my/wp-content/uploads/2024/03/Untitled-design-18-300x300.png" alt="Club" class="gallery-img mb-2">
+            </a>
+            <div class="outfit-title">KELAB GAMELAN MARGAMAS UPSI</div>
+        </div>
+
+        <div class="outfit-card">
+            <a href="https://kebudayaan.upsi.edu.my/destar-limar-club/" target="_blank">
+                <img src="https://kebudayaan.upsi.edu.my/wp-content/uploads/2024/03/Untitled-design-17-300x300.png" alt="Club" class="gallery-img mb-2">
+            </a>
+            <div class="outfit-title">KELAB DESTAR LIMAR</div>
+
+            <a href="https://kebudayaan.upsi.edu.my/u-tech-club/" target="_blank">
+                <img src="https://kebudayaan.upsi.edu.my/wp-content/uploads/2018/12/logo_utech-300x291.png" alt="Club" class="gallery-img mb-2">
+            </a>
+            <div class="outfit-title">KELAB U-TECH</div>
+        </div>
+    </div>
+</div>
+
 
 </div>
 @endsection

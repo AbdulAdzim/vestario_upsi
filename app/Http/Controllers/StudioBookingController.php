@@ -333,8 +333,18 @@ public function finalSubmit(Request $request)
     $hasBooking = false;
 
     foreach ($data['sizes'] as $outfitId => $size) {
-        if ($size && isset($data['dates'][$outfitId], $data['returns'][$outfitId])) {
-            OutfitBooking::create([
+        $outfit = \App\Models\Outfit::find($outfitId);
+
+        if (!$outfit) continue;
+
+        $bookingDate = $data['dates'][$outfitId] ?? null;
+        $returnDate = $data['returns'][$outfitId] ?? null;
+
+        $isAccessories = $outfit->type === 'accessories';
+
+        // Allow booking if accessories OR size is selected
+        if ($bookingDate && $returnDate && ($isAccessories || $size)) {
+            \App\Models\OutfitBooking::create([
                 'outfit_id' => $outfitId,
                 'user_id' => $userId,
                 'name' => $data['name'],
@@ -342,9 +352,9 @@ public function finalSubmit(Request $request)
                 'club' => $data['club'],
                 'purpose' => $data['purpose'],
                 'phone' => $data['phone'],
-                'size' => $size,
-                'booking_date' => $data['dates'][$outfitId],
-                'return_date' => $data['returns'][$outfitId],
+                'size' => $isAccessories ? 'N/A' : $size,
+                'booking_date' => $bookingDate,
+                'return_date' => $returnDate,
                 'status' => 'pending',
             ]);
             $hasBooking = true;
@@ -357,6 +367,7 @@ public function finalSubmit(Request $request)
         ? redirect()->route('busana')->with('success', '✅ Booking submitted successfully!')
         : redirect()->route('busana')->with('error', '❌ No valid outfit booking found.');
 }
+
 
 // View image for welcome page
 public function dashboard()

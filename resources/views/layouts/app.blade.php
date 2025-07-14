@@ -3,44 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>{{ config('visitor.name', 'Vestario') }} - @yield('title', 'Home')</title>
 
-    <title>{{ config('app.name', 'Vestario') }} - @yield('title', 'Home')</title>
-
-    <!-- Bootstrap CSS from CDN (HTTPS is OK) -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Load Laravel Vite Assets (uses HTTPS if APP_URL is set properly) -->
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
 
     <style>
         body {
-            background-color: #b3b3b3;
+            background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
         }
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
+
+
+        .container1 {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px;
+            background-color: #f9fafb;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .nav-link {
-            font-size: 1.1rem;
+
+        .outfit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
-        .custom-navbar {
-        background-color: #d4edda; /* light green */
-        margin: 20px auto;
-        padding: 10px 20px;
-        border-radius: 1rem;
-        max-width: 99%;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* custom shadow */        
+
+        .outfit-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #fff;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            text-align: center;
+        }
+
+        .outfit-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .img-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gallery-img {
+            width: 100%;
+            max-width: 220px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
 <body>
 
     <!-- Header Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light custom-navbar shadow rounded mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">Vestario</a>
+            <a class="navbar-brand fw-bold" href="{{ route('home') }}">Vestario</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -48,46 +81,53 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('Studio') }}">Studio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('busana') }}">Busana</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('bookings.search') }}">Check Booking</a></li>
-
-                    @auth
-                    <!-- Authenticated User Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            {{ Auth::user()->name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li class="dropdown-item text-muted small">{{ Auth::user()->email }}</li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('settings.profile') }}">
-                                    ⚙️ Settings
+                    @if (Route::has('login'))
+                        @auth
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    {{ Auth::user()->name }}
                                 </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li class="dropdown-item text-muted small">{{ Auth::user()->email }}</li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('settings.profile') }}">
+                                            ⚙️ Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">🚪 Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        🚪 Logout
-                                    </button>
-                                </form>
+                        @else
+                            <li class="nav-item">
+                                <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm me-2">Log in</a>
                             </li>
-                        </ul>
-                    </li>
-                    @endauth
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a href="{{ route('register') }}" class="btn btn-outline-dark btn-sm">Register</a>
+                                </li>
+                            @endif
+                        @endauth
+                    @endif
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Page Content -->
+    <!-- Main Page Content -->
     <main class="py-4">
-        @yield('content')
+        <div class="container1">
+            @yield('content')
+        </div>
     </main>
 
-    <!-- Bootstrap JS from CDN (uses HTTPS) -->
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
