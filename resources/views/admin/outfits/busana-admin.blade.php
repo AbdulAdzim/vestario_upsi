@@ -179,11 +179,12 @@
 
     <!-- 🔄 Tabs -->
     <ul class="nav nav-tabs mb-3" id="busanaTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="add-tab" data-bs-toggle="tab" href="#addOutfit" role="tab">➕ Add Outfit</a>
-        </li>
+        
         <li class="nav-item">
             <a class="nav-link" id="booking-tab" data-bs-toggle="tab" href="#viewBookings" role="tab">📋 View Bookings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" id="add-tab" data-bs-toggle="tab" href="#addOutfit" role="tab">➕ Add Outfit</a>
         </li>
     </ul>
 
@@ -193,8 +194,7 @@
         <div class="tab-pane fade show active" id="addOutfit" role="tabpanel">
             @include('admin.outfits.partials.add-outfit-form')
         </div>
-
-        <!-- 📋 View Bookings Tab -->
+         <!-- 📋 View Bookings Tab -->
         <div class="tab-pane fade" id="viewBookings" role="tabpanel">
             @include('admin.outfits.partials.view-bookings')
         </div>
