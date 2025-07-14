@@ -6,12 +6,18 @@
         <p class="text-muted">Welcome to Vestario, All easy to use booking busana and studio in UPSI</p>
     </div>
     <!-- Image Gallery -->
-    <div class="row flex-nowrap overflow-auto pb-3">
-        @foreach (['fashion1', 'fashion2', 'fashion3', 'fashion4', 'fashion5'] as $tag)
-        <div class="col-auto">
-            <img src="https://source.unsplash.com/300x400/?{{ $tag }}" class="rounded shadow-sm me-3" style="width: 300px; height: 400px; object-fit: cover;" alt="{{ ucfirst($tag) }}">
+    <div class="container my-5">
+        <div class="row flex-nowrap overflow-auto pb-3" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+            @foreach (['fashion1', 'fashion2', 'fashion3', 'fashion4', 'fashion5'] as $tag)
+            <div class="col-auto" style="scroll-snap-align: start;">
+                <img src="{{ asset('images/' . $tag . '.jpg') }}" 
+                    class="rounded shadow-sm me-3" 
+                    style="width: 300px; height: 400px; object-fit: cover;" 
+                    alt="{{ ucfirst($tag) }}">
+                    
+            </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
 </div>
 @endsection
