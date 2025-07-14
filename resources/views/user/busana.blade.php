@@ -89,7 +89,7 @@
                                 @if($outfit->status === 'available')
                                     <div class="col">
                                         <div class="card h-100 border-0 shadow-sm rounded-4">
-                                            <img src="{{ asset('storage/' . $outfit->image_path) }}" class="card-img-top rounded-top-4" alt="{{ $outfit->name }}" style="object-fit: cover; height: 200px;">
+                                            <img src="{{ $outfit->image_path }}" class="card-img-top rounded-top-4" alt="{{ $outfit->name }}" style="object-fit: cover; height: 200px;">
                                             <div class="card-body d-flex flex-column">
                                                 <h6 class="fw-semibold mb-1">{{ $outfit->name }}</h6>
                                                 <p class="text-muted small">{{ Str::limit($outfit->description, 50) }}</p>

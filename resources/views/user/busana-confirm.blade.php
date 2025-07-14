@@ -105,8 +105,8 @@
         <div class="section-title">Outfit Selections</div>
         @forelse($outfits as $outfit)
             <div class="outfit-item">
-                @if($outfit->image_path)
-                    <img src="{{ asset('storage/' . $outfit->image_path) }}" alt="Outfit Image" class="outfit-img">
+                @if ($outfit->image_path)
+                    <img src="{{ $outfit->image_path }}" alt="Outfit Image" class="outfit-img">
                 @endif
                 <div class="outfit-details">
                     <h6>{{ $outfit->name }}</h6>

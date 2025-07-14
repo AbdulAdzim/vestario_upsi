@@ -39,8 +39,8 @@
 
         <br><label>Upload New Image (optional):</label>
         <input type="file" name="image" class="form-control mb-2">
-        @if($outfit->image_path)
-            <img src="{{ asset('storage/' . $outfit->image_path) }}" width="120" class="mt-2">
+        @if ($outfit->image_path)
+            <img src="{{ $outfit->image_path }}" width="120" class="mt-2">
         @endif
 
         <button type="submit" class="btn btn-primary mt-3">Update Outfit</button>
