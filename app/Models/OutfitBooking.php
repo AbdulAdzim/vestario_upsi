@@ -22,7 +22,7 @@ class OutfitBooking extends Model
 
     public function outfit()
     {
-        return $this->belongsTo(Outfit::class);
+        return $this->belongsTo(Outfit::class, 'outfit_id');
     }
 }
 

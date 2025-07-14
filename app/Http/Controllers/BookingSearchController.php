@@ -27,9 +27,10 @@ class BookingSearchController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
         } elseif ($request->type === 'busana') {
-            $results = BusanaBooking::where('matric_no', $request->matrics)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            $results = BusanaBooking::with('outfit') // Eager load outfit relationship
+            ->where('matric_no', $request->matrics)
+            ->orderBy('created_at', 'desc')
+            ->get();
         }
 
         return view('bookings.search', [

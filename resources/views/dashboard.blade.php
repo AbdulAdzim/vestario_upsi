@@ -16,6 +16,7 @@
                  class="rounded shadow-sm me-3"
                  style="width: 300px; height: 400px; object-fit: cover;">
         </div>
+        @endforeach
     </div>
 
 </div>
