@@ -159,7 +159,7 @@ class StudioBookingController extends Controller
         // ✅ Step 1: Check Cloudinary config before uploading
         $config = config('cloudinary');
         if (!isset($config['cloud']['cloud_name'], $config['cloud']['api_key'], $config['cloud']['api_secret'])) {
-            abort(500, '❌ Cloudinary configuration is missing.');
+            abort(500, 'Cloudinary configuration is missing.');
         }
 
         $cloudinary = new \Cloudinary\Cloudinary([
