@@ -10,7 +10,7 @@
 
     <style>
         body {
-            background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background: url('https://permohonanupu.com/wp-content/uploads/2023/02/Bangunan-Suluh-Budiman2-1024x686-1.jpeg') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
