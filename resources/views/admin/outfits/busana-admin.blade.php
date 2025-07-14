@@ -173,8 +173,6 @@
     }
 </style>
 
-
-
 <h1 class="display-5 fw-bold mb-4">Manage Outfit</h1>
 
 <!-- 🔄 Tabs -->

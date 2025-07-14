@@ -85,6 +85,7 @@
     <div class="mb-4">
         <label for="image" class="form-label">Upload Outfit Image</label>
         <input type="file" name="image" class="form-control" accept="image/*">
+        <small class="text-muted">Max file size: 2MB. Accepted formats: JPG, JPEG, PNG, WEBP.</small>
     </div>
 
     <!-- Submit Button -->

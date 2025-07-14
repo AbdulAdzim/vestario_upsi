@@ -12,9 +12,19 @@
             <p><strong>Matrics:</strong> {{ $booking->matrics }}</p>
             <p><strong>Club:</strong> {{ $booking->club }}</p>
             <p><strong>Reason:</strong> {{ $booking->reason }}</p>
-            <p><strong>Studio(s):</strong> {{ $booking->studio }}</p>
+
+            {{-- ✅ FIXED: Display studio(s) from JSON --}}
+            <p><strong>Studio(s):</strong>
+                @if(is_array(json_decode($booking->studios)))
+                    {{ implode(', ', json_decode($booking->studios)) }}
+                @else
+                    {{ $booking->studios }}
+                @endif
+            </p>
+
             <p><strong>Date:</strong> {{ $booking->start_date }} to {{ $booking->end_date }}</p>
             <p><strong>Time:</strong> {{ $booking->time_slot }}</p>
+
             <p><strong>Status:</strong>
                 @if ($booking->status == 'pending')
                     <span class="text-warning">Pending</span>

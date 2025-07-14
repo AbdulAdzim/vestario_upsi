@@ -10,9 +10,9 @@
             <div class="mb-2"><strong>Available Sizes:</strong> {{ $outfit->available_sizes ?? 'Free Size' }}</div>
 
             @if ($outfit->image_path)
-                <img src="{{ asset('storage/' . $outfit->image_path) }}"
-                     alt="Outfit Image"
-                     style="max-height: 150px; width: auto; margin-top: 10px;">
+                <img src="{{ $outfit->image_path }}"
+                    alt="Outfit Image"
+                    style="max-height: 150px; width: auto; margin-top: 10px;">
             @else
                 <p style="color: gray;">No image uploaded</p>
             @endif
