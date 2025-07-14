@@ -7,7 +7,7 @@ use App\Models\StudioBooking;
 use App\Models\Outfit;
 use App\Models\OutfitBooking;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;    
 use Illuminate\Support\Facades\Storage;
 
 class StudioBookingController extends Controller
@@ -151,7 +151,7 @@ class StudioBookingController extends Controller
             'type' => 'required|string',
             'gender' => 'required|string',
             'status' => 'required|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $imagePath = $request->hasFile('image')
@@ -203,7 +203,7 @@ class StudioBookingController extends Controller
             'type' => 'required|string',
             'gender' => 'required|string',
             'status' => 'required|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'available_sizes' => 'required|array',
         ]);
 
@@ -235,8 +235,6 @@ class StudioBookingController extends Controller
     }
 
     // ✅ Admin: Accept outfit booking
-    
-
     public function acceptOutfitBooking($id)
 {
     $booking = \App\Models\OutfitBooking::findOrFail($id);
@@ -360,5 +358,15 @@ public function finalSubmit(Request $request)
         : redirect()->route('busana')->with('error', '❌ No valid outfit booking found.');
 }
 
+// View image for welcome page
+public function dashboard()
+{
+    // Example: Load all outfits or filter as needed
+    $outfits = \App\Models\Outfit::select('name', 'image_path')->get();
 
+    return view('dashboard', [
+        'outfits' => $outfits,
+    ]);
 }
+
+}// End of StudioBookingController
