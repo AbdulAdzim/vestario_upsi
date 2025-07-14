@@ -52,6 +52,7 @@ Route::get('/busana', function () {
 })->name('busana');
 
 
+
 // 🧾 Store form input into session
 Route::post('/busana/confirm', [StudioBookingController::class, 'confirmPreview'])->name('busana.confirm');
 
@@ -90,4 +91,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/admin/outfit-bookings/{id}/accept', [StudioBookingController::class, 'acceptOutfitBooking'])->name('admin.outfit.accept');
     Route::post('/admin/outfit-bookings/{id}/reject', [StudioBookingController::class, 'rejectOutfitBooking'])->name('admin.outfit.reject');
     Route::post('/admin/outfit-bookings/{id}/handle', [StudioBookingController::class, 'handleDecision'])->name('admin.outfit.handle');
+
+
+
+
 });

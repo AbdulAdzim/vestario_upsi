@@ -175,30 +175,28 @@
 
 
 <div class="container mt-4">
-    <h1 class="display-5 fw-bold mb-4">Manage Outfit</h1>
+    <h1 class="display-5 fw-bold mb-4">🧵 Manage Busana</h1>
 
-    <!-- 🔄 Tabs -->
-    <ul class="nav nav-tabs mb-3" id="busanaTab" role="tablist">
-        
-        <li class="nav-item">
-            <a class="nav-link" id="booking-tab" data-bs-toggle="tab" href="#viewBookings" role="tab">📋 View Bookings</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" id="add-tab" data-bs-toggle="tab" href="#addOutfit" role="tab">➕ Add Outfit</a>
-        </li>
-    </ul>
+<!-- 🔄 Tabs -->
+<ul class="nav nav-tabs mb-3" id="busanaTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="booking-tab" data-bs-toggle="tab" href="#viewBookings" role="tab">📋 View Bookings</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="add-tab" data-bs-toggle="tab" href="#addOutfit" role="tab">➕ Add Outfit</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="list-tab" data-bs-toggle="tab" href="#outfitList" role="tab">🧵 Outfit List</a>
+    </li>
+</ul>
 
-    <div class="tab-content" id="busanaTabContent">
-
-        <!-- ➕ Add Outfit Tab -->
-        <div class="tab-pane fade show active" id="addOutfit" role="tabpanel">
-            @include('admin.outfits.partials.add-outfit-form')
-        </div>
-         <!-- 📋 View Bookings Tab -->
-        <div class="tab-pane fade" id="viewBookings" role="tabpanel">
-            @include('admin.outfits.partials.view-bookings')
-        </div>
-
+<!-- Tab Content -->
+<div class="tab-content" id="busanaTabContent">
+    <div class="tab-pane fade show active" id="viewBookings" role="tabpanel">
+        @include('admin.outfits.partials.view-bookings')
+    </div>
+    <div class="tab-pane fade" id="addOutfit" role="tabpanel">
+        @include('admin.outfits.partials.add-outfit-form')
     </div>
 
     <hr>
@@ -219,7 +217,7 @@
 
             <!-- Image -->
             @if ($outfit->image_path)
-                <img src="{{ $outfit->image_path }}" 
+                <img src="{{ asset('storage/' . $outfit->image_path) }}" 
                     alt="Outfit Image" 
                     style="max-height: 150px; width: auto; margin-top: 10px;">
             @else

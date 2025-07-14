@@ -73,6 +73,7 @@
     <!-- Header Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
+            <img src="{{ asset('favicon.svg') }}" alt="icon" class="navbar-brand me-2" style="width: 50px; height: 50px;">
             <a class="navbar-brand fw-bold" href="{{ route('home') }}">Vestario</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

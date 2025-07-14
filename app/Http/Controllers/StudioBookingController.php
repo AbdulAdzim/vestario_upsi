@@ -380,18 +380,20 @@ class StudioBookingController extends Controller
 
         session()->forget('booking_preview');
 
-        return $hasBooking
-            ? redirect()->route('busana')->with('success', '✅ Booking submitted successfully!')
-            : redirect()->route('busana')->with('error', '❌ No valid outfit booking found.');
-    }
+    return $hasBooking
+        ? redirect()->route('busana')->with('success', '✅ Booking submitted successfully!')
+        : redirect()->route('busana')->with('error', '❌ No valid outfit booking found.');
+}
+
 
     // View image for welcome page
     public function dashboard()
     {
         $outfits = \App\Models\Outfit::select('name', 'image_path')->get();
 
-        return view('dashboard', [
-            'outfits' => $outfits,
-        ]);
-    }
-} // End of StudioBookingController
+    return view('dashboard', [
+        'outfits' => $outfits,
+    ]);
+}
+
+}// End of StudioBookingController
