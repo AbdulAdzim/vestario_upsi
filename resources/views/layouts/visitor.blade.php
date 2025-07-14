@@ -83,6 +83,9 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     @if (Route::has('login'))
                         @auth
+                            <li class="nav-item mb-2"><a href="{{ route('Studio') }}" class="nav-link">Studio</a></li>
+                    <li class="nav-item mb-2"><a href="{{ route('busana') }}" class="nav-link">Outfit</a></li>
+                    <li class="nav-item mb-2"><a href="{{ route('bookings.search') }}" class="nav-link">My Booking</a></li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                     {{ Auth::user()->name }}

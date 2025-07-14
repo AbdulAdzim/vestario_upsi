@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('visitor.name', 'Vestario') }} - @yield('title', 'Home')</title>
 
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -16,12 +22,16 @@
             color: #333;
         }
 
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(6px);
+        }
 
         .container1 {
             max-width: 1200px;
             margin: auto;
             padding: 30px;
-            background-color: #f9fafb;
+            background-color: rgba(255, 255, 255, 0.92); /* translucent white */
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
@@ -71,7 +81,7 @@
 <body>
 
     <!-- Header Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('home') }}">Vestario</a>
 
@@ -81,6 +91,9 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item mb-2"><a href="{{ route('Studio') }}" class="nav-link">Studio</a></li>
+                    <li class="nav-item mb-2"><a href="{{ route('busana') }}" class="nav-link">Outfit</a></li>
+                    <li class="nav-item mb-2"><a href="{{ route('bookings.search') }}" class="nav-link">My Booking</a></li>
                     @if (Route::has('login'))
                         @auth
                             <li class="nav-item dropdown">
@@ -125,6 +138,11 @@
             @yield('content')
         </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted mt-5 mb-3 small">
+        &copy; {{ date('Y') }} Vestario. All rights reserved.
+    </footer>
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
