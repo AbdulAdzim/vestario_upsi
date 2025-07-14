@@ -33,7 +33,8 @@
         <!-- Sidebar -->
         <nav class="col-md-3 col-lg-2 d-md-block bg-white sidebar">
             <div class="px-3">
-                <h4 class="fw-bold mb-4">Vestario</h4>
+            <img src="{{ asset('favicon.svg') }}" alt="icon" class="navbar-brand me-2" style="width: 70px; height: 70px;">    
+            <h4 class="fw-bold mb-4">Vestario</h4>
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2"><a href="{{ route('admin.dashboard') }}" class="nav-link">🏠 Home</a></li>
                     <li class="nav-item mb-2"><a href="{{ route('admin.bookings') }}" class="nav-link">🎵 Manage Studio</a></li>
