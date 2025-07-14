@@ -1,5 +1,5 @@
-<!-- ✅ User Booking Requests -->
 <h3>User Booking Requests</h3>
+
 @if($bookings->isEmpty())
     <p class="text-muted">No bookings yet.</p>
 @else
@@ -39,22 +39,21 @@
                     </td>
                     <td>
                         @if($booking->status === 'pending')
-    <form action="{{ route('admin.outfit.handle', $booking->id) }}" method="POST">
-        @csrf
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="decision" id="accept-{{ $booking->id }}" value="accepted" required>
-            <label class="form-check-label" for="accept-{{ $booking->id }}">Accept</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="decision" id="reject-{{ $booking->id }}" value="rejected">
-            <label class="form-check-label" for="reject-{{ $booking->id }}">Reject</label>
-        </div>
-        <button type="submit" class="btn btn-sm btn-primary mt-1">Submit</button>
-    </form>
-@else
-    <em>No action</em>
-@endif
-
+                            <form action="{{ route('admin.outfit.handle', $booking->id) }}" method="POST">
+                                @csrf
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="decision" id="accept-{{ $booking->id }}" value="accepted" required>
+                                    <label class="form-check-label" for="accept-{{ $booking->id }}">Accept</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="decision" id="reject-{{ $booking->id }}" value="rejected">
+                                    <label class="form-check-label" for="reject-{{ $booking->id }}">Reject</label>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary mt-1">Submit</button>
+                            </form>
+                        @else
+                            <em>No action</em>
+                        @endif
                     </td>
                 </tr>
             @endforeach

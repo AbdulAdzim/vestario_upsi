@@ -364,7 +364,7 @@ public function finalSubmit(Request $request)
     session()->forget('booking_preview');
 
     return $hasBooking
-        ? redirect()->route('busana')->with('success', '✅ Booking submitted successfully!')
+        ? redirect()->route('busana')->with('success', 'Booking success!')
         : redirect()->route('busana')->with('error', '❌ No valid outfit booking found.');
 }
 
@@ -379,5 +379,10 @@ public function dashboard()
         'outfits' => $outfits,
     ]);
 }
+
+
+
+
+
 
 }// End of StudioBookingController
