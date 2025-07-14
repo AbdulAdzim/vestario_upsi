@@ -11,7 +11,7 @@
     <div class="row flex-nowrap overflow-auto pb-3">
         @foreach ($outfits as $outfit)
         <div class="col-auto">
-            <img src="{{ asset('storage/outfits/' . $outfit->image) }}"
+           <img src="{{ asset('storage/' . $outfit->image_path) }}"
                  alt="{{ $outfit->name }}"
                  class="rounded shadow-sm me-3"
                  style="width: 300px; height: 400px; object-fit: cover;">
